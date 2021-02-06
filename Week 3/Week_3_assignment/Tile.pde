@@ -84,7 +84,6 @@ class Tile {
    * @return None
    */
   void moveTileH(int destCol) {
-    doneMoving = false;
     // Get step size from distance
     float oldX = xPos(colPos);
     float newX = xPos(destCol);
@@ -100,6 +99,7 @@ class Tile {
     if (round(xPos) == newX) {
       xPos = newX;
       colPos = destCol;
+      moving = false;
       doneMoving = true;
       updateID();
     }
@@ -194,6 +194,11 @@ class Tile {
     } else {
       return false;
     }
+  }
+  
+  void resetMovement() {
+    moving = false;
+    doneMoving = false;
   }
 
   void test() {

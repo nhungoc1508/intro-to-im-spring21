@@ -13,7 +13,7 @@ class Game {
     keyHandler.put(UP, false);
     keyHandler.put(DOWN, false);
 
-    Tile tile0 = specificTile(2, 0, 0);
+    Tile tile0 = specificTile(64, 1, 0);
     Tile tile1 = specificTile(2, 2, 0);
     //Tile tile1 = randTile();
     //tiles.add(tile0.tileID, tile0);
@@ -45,11 +45,42 @@ class Game {
     //    }
     //  }
     //}
-    Tile tile = tiles[0];
+    Tile tile = tiles[4];
     tile.displayTile();
     tiles[8].displayTile();
 
+    if (keyHandler.get(RIGHT)) {
+      tile.resetMovement();
+      tile.moving = true;
+      int dest = tile.colPos;
+      if (tile.moving && !tile.doneMoving) {
+        dest = getRightDest(tile);
+      }
+      tile.moveTileH(dest);
+    }
+    
+    if (keyHandler.get(LEFT)) {
+      tile.resetMovement();
+      tile.moving = true;
+      int dest = tile.colPos;
+      if (tile.moving && !tile.doneMoving) {
+        dest = getLeftDest(tile);
+      }
+      tile.moveTileH(dest);
+    }
+
+    if (keyHandler.get(UP)) {
+      tile.resetMovement();
+      tile.moving = true;
+      int dest = tile.rowPos;
+      if (tile.moving && !tile.doneMoving) {
+        dest = getTopDest(tile);
+      }
+      tile.moveTileV(dest);
+    }
+
     if (keyHandler.get(DOWN)) {
+      tile.resetMovement();
       tile.moving = true;
       int dest = tile.rowPos;
       if (tile.moving && !tile.doneMoving) {
