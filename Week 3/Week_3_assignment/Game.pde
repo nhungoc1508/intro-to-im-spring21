@@ -1,18 +1,20 @@
+import java.util.Map;
+
 class Game {
   Grid grid = new Grid();
   //ArrayList<Tile> tiles = new ArrayList<Tile>(16);
   Tile[] tiles = new Tile[16];
   int gridNum = 4;
+  HashMap<Integer, Boolean> keyHandler = new HashMap<Integer, Boolean>();
 
   Game() {
-    Tile tile0 = specificTile(4, 3, 0);
-    Tile tile1 = specificTile(2, 0, 1);
+    Tile tile0 = specificTile(2, 0, 0);
+    Tile tile1 = specificTile(2, 2, 0);
     //Tile tile1 = randTile();
     //tiles.add(tile0.tileID, tile0);
     //tiles.add(tile1.tileID, tile1);
     tiles[tile0.tileID] = tile0;
     tiles[tile1.tileID] = tile1;
-    //tiles[tile1.tileID] = tile1;
   }
 
   void displayGame() {
@@ -38,9 +40,9 @@ class Game {
     //    }
     //  }
     //}
-    Tile tile = tiles[12];
+    Tile tile = tiles[0];
     tile.displayTile();
-    tiles[1].displayTile();
+    tiles[8].displayTile();
     if (key == CODED) {
       if (keyCode == RIGHT) {
         int dest = getRightDest(tile);
@@ -56,6 +58,14 @@ class Game {
         int dest = getTopDest(tile);
         //println("Dest: " + str(dest));
         tile.moveTileV(dest);
+      }
+      if (keyCode == DOWN) {
+        tile.moving = true;
+        while (tile.moving) {
+          int dest = getBottomDest(tile);
+          //println("Dest: " + str(dest));
+          tile.moveTileV(dest);
+        }
       }
     }
   }
@@ -172,32 +182,36 @@ class Game {
     }
   }
 
-  //int getRightDest(Tile tile) {
-  //  if (tile.isAtRightEdge()) {
-  //    //println("Tile at ["+str(tile.rowPos)+", "+str(tile.colPos)+"] is at right edge.");
-  //    return tile.colPos;
-  //  } else {
-  //    //println("Tile at ["+str(tile.rowPos)+", "+str(tile.colPos)+"] is NOT at right edge.");
-  //    int curCol = tile.colPos + 1;
-  //    while (curCol <= 3) {
-  //      //println("Checking tile at ["+str(tile.rowPos)+", "+str(curCol)+"]");
-  //      if (grid.checkIfOccupied(tile.rowPos, curCol)) {
-  //        //println("Tile at ["+str(tile.rowPos)+", "+str(curCol)+"] is occupied.");
-  //        int rightTileID = gridNum*tile.rowPos + curCol;
-  //        Tile rightTile = tiles[rightTileID];
-  //        if (tile.sameValue(rightTile)) {
-  //          //println("Tile at ["+str(rightTile.rowPos)+", "+str(rightTile.colPos)+"] has the same value.");
-  //          return curCol;
-  //        } else {
-  //          //println("Tile at ["+str(rightTile.rowPos)+", "+str(rightTile.colPos)+"] has different value.");
-  //          return curCol-1;
-  //        }
-  //      } else {
-  //        //println("Tile at ["+str(tile.rowPos)+", "+str(curCol)+"] is NOT occupied.");
-  //        curCol += 1;
-  //      }
-  //    }
-  //    return curCol-1;
-  //  }
-  //}
+  int getBottomDest(Tile tile) {
+    if (tile.isAtBottomEdge()) {
+      println("Tile at ["+str(tile.rowPos)+", "+str(tile.colPos)+"] is at bottom edge.");
+      println("return"+str(tile.rowPos));
+      return tile.rowPos;
+    } else {
+      println("Tile at ["+str(tile.rowPos)+", "+str(tile.colPos)+"] is NOT at bottom edge.");
+      int curRow = tile.rowPos + 1;
+      while (curRow <= 3) {
+        println("Checking tile at ["+str(curRow)+", "+str(tile.colPos)+"]");
+        if (grid.checkIfOccupied(curRow, tile.colPos)) {
+          println("Tile at ["+str(curRow)+", "+str(tile.colPos)+"] is occupied.");
+          int bottomTileID = gridNum*curRow + tile.colPos;
+          Tile bottomTile = tiles[bottomTileID];
+          if (tile.sameValue(bottomTile)) {
+            println("Tile at ["+str(bottomTile.rowPos)+", "+str(bottomTile.colPos)+"] has the same value.");
+            println("return"+str(curRow));
+            return curRow;
+          } else {
+            println("Tile at ["+str(bottomTile.rowPos)+", "+str(bottomTile.colPos)+"] has different value.");
+            println("return"+str(curRow-1));
+            return curRow-1;
+          }
+        } else {
+          println("Tile at ["+str(curRow)+", "+str(tile.colPos)+"] is NOT occupied.");
+          curRow += 1;
+        }
+      }
+      println("return"+str(curRow-1));
+      return curRow-1;
+    }
+  }
 }

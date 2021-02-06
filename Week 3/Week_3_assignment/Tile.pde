@@ -5,6 +5,7 @@ class Tile {
   color tileColor, textColor;
   float alpha = 0;
   boolean visible = true;
+  boolean moving = false;
   int rowPos, colPos;
   float yPos, xPos;
   HashMap<Integer, Integer> tileColorMap = new HashMap<Integer, Integer>();
@@ -82,6 +83,7 @@ class Tile {
    * @return None
    */
   void moveTileH(int destCol) {
+    moving = true;
     // Get step size from distance
     float oldX = xPos(colPos);
     float newX = xPos(destCol);
@@ -97,6 +99,7 @@ class Tile {
     if (round(xPos) == newX) {
       xPos = newX;
       colPos = destCol;
+      moving = false;
       updateID();
     }
   }
@@ -111,11 +114,13 @@ class Tile {
       yPos += stepSize;
     }
     if (round(yPos) == newY) {
+      println("Round round round");
       yPos = newY;
       rowPos = destRow;
+      moving = false;
       updateID();
     }
-    println(yPos, destRow);
+    //println(yPos, destRow);
   }
 
   void updateAlpha() {
@@ -192,11 +197,7 @@ class Tile {
 
   void test() {
     /** Misc code for testing purposes */
-    //for (Map.Entry me : tileColorMap.entrySet()) {
-    //  print(me.getKey() + ": ");
-    //  println(me.getValue());
-    //}
-
-    println(alpha);
+    println("Row: "+str(rowPos));
+    println("Col: "+str(colPos));
   }
 }
