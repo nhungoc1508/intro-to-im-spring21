@@ -94,6 +94,23 @@ class Grid {
     return cell.queue.remove();
   }
   
+  Tile peekFirst(Tile tile) {
+    int id = getID(tile.rowPos, tile.colPos);
+    Cell cell = cells.get(id);
+    return cell.queue.peekFirst();
+  }
+  
+  Tile peekLast(Tile tile) {
+    int id = getID(tile.rowPos, tile.colPos);
+    Cell cell = cells.get(id);
+    return cell.queue.peekLast();
+  }
+  
+  Tile peek(int id) {
+    Cell cell = cells.get(id);
+    return cell.queue.peek();
+  }
+  
   boolean checkCollision(Tile tile) {
     int id = getID(tile.rowPos, tile.colPos);
     Cell cell = cells.get(id);

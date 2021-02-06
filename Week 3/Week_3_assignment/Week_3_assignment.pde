@@ -6,6 +6,7 @@ Game game;
 
 void setup() {
   size(600, 600);
+  frameRate(5);
   game = new Game();
   tile0 = new Tile(2, 0, 1);
   tile1 = new Tile(2048, 2, 3);

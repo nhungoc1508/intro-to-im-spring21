@@ -4,6 +4,7 @@ class Tile {
   int value;
   color tileColor, textColor;
   float alpha = 0;
+  boolean doneDisappearing = false;
   boolean visible = true;
   boolean moving = false;
   boolean doneMoving = false;
@@ -121,15 +122,17 @@ class Tile {
 
   void updateAlpha() {
     if (visible) {
-      if (alpha < 255) {
-        alpha += 17; // 17=255/15 (15, 30, 60 ...)
-      } else {
-        alpha = 255;
-      }
+      //if (alpha < 255) {
+      //  alpha += 17; // 17=255/15 (15, 30, 60 ...)
+      //} else {
+      //  alpha = 255;
+      //}
+      alpha = 255;
     } else {
       if (alpha > 0) {
         alpha -= 17;
       } else {
+        doneDisappearing = true;
         alpha = 0;
       }
     }
