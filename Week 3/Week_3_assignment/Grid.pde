@@ -46,7 +46,7 @@ class Grid {
     Cell cell = cells.get(id);
     return cell.occupied;
   }
-  
+
   boolean checkIfOccupied(int id) {
     Cell cell = cells.get(id);
     return cell.occupied;
@@ -56,6 +56,18 @@ class Grid {
     int id = getID(tile.rowPos, tile.colPos);
     Cell cell = cells.get(id);
     cell.changeStatus();
+  }
+
+  void vacant(Tile tile) {
+    int id = getID(tile.rowPos, tile.colPos);
+    Cell cell = cells.get(id);
+    cell.occupied = false;
+  }
+
+  void occupy(Tile tile) {
+    int id = getID(tile.rowPos, tile.colPos);
+    Cell cell = cells.get(id);
+    cell.occupied = true;
   }
 
   void setCurrentValue(Tile tile) {

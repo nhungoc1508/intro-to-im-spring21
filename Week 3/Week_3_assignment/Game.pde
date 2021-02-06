@@ -13,7 +13,7 @@ class Game {
     keyHandler.put(UP, false);
     keyHandler.put(DOWN, false);
 
-    Tile tile0 = specificTile(64, 1, 0);
+    Tile tile0 = specificTile(2, 1, 0);
     Tile tile1 = specificTile(2, 2, 0);
     //Tile tile1 = randTile();
     //tiles.add(tile0.tileID, tile0);
@@ -46,47 +46,28 @@ class Game {
     //  }
     //}
     Tile tile = tiles[4];
+    Tile tile1 = tiles[8];
     tile.displayTile();
-    tiles[8].displayTile();
+    tile1.displayTile();
 
     if (keyHandler.get(RIGHT)) {
-      tile.resetMovement();
-      tile.moving = true;
-      int dest = tile.colPos;
-      if (tile.moving && !tile.doneMoving) {
-        dest = getRightDest(tile);
-      }
-      tile.moveTileH(dest);
+      moveTileRight(tile);
     }
-    
+
     if (keyHandler.get(LEFT)) {
-      tile.resetMovement();
-      tile.moving = true;
-      int dest = tile.colPos;
-      if (tile.moving && !tile.doneMoving) {
-        dest = getLeftDest(tile);
-      }
-      tile.moveTileH(dest);
+      moveTileLeft(tile);
     }
 
     if (keyHandler.get(UP)) {
-      tile.resetMovement();
-      tile.moving = true;
-      int dest = tile.rowPos;
-      if (tile.moving && !tile.doneMoving) {
-        dest = getTopDest(tile);
-      }
-      tile.moveTileV(dest);
+      moveTileUp(tile);
     }
 
     if (keyHandler.get(DOWN)) {
-      tile.resetMovement();
-      tile.moving = true;
-      int dest = tile.rowPos;
-      if (tile.moving && !tile.doneMoving) {
-        dest = getBottomDest(tile);
+      moveTileDown(tile1);
+      if (tile1.doneMoving) {
+        grid.changeStatus(tile);
+        moveTileDown(tile);
       }
-      tile.moveTileV(dest);
     }
   }
 
@@ -98,14 +79,14 @@ class Game {
       randCol = floor(random(4));
     }
     Tile tile = new Tile(2, randRow, randCol);
-    grid.changeStatus(tile);
+    grid.occupy(tile);
     grid.setCurrentValue(tile);
     return tile;
   }
 
   Tile specificTile(int val, int row, int col) {
     Tile tile = new Tile(val, row, col);
-    grid.changeStatus(tile);
+    grid.occupy(tile);
     grid.setCurrentValue(tile);
     return tile;
   }
@@ -113,6 +94,52 @@ class Game {
   int getTileValue(int row, int col) {
     int id = gridNum*row+col;
     return tiles[id].value;
+  }
+
+  void moveTileRight(Tile tile) {
+    tile.resetMovement();
+    grid.changeStatus(tile);
+    tile.moving = true;
+    int dest = tile.colPos;
+    if (tile.moving && !tile.doneMoving) {
+      dest = getRightDest(tile);
+    }
+    tile.moveTileH(dest);
+  }
+
+  void moveTileLeft(Tile tile) {
+    tile.resetMovement();
+    grid.changeStatus(tile);
+    tile.moving = true;
+    int dest = tile.colPos;
+    if (tile.moving && !tile.doneMoving) {
+      dest = getLeftDest(tile);
+    }
+    tile.moveTileH(dest);
+  }
+
+  void moveTileUp(Tile tile) {
+    tile.resetMovement();
+    grid.changeStatus(tile);
+    tile.moving = true;
+    int dest = tile.rowPos;
+    if (tile.moving && !tile.doneMoving) {
+      dest = getTopDest(tile);
+    }
+    tile.moveTileV(dest);
+  }
+
+  void moveTileDown(Tile tile) {
+    tile.resetMovement();
+    grid.vacant(tile);
+    tile.moving = true;
+    int dest = tile.rowPos;
+    if (tile.moving && !tile.doneMoving) {
+      dest = getBottomDest(tile);
+    }
+    tile.moveTileV(dest);
+    grid.occupy(tile);
+    tiles[tile.tileID] = tile;
   }
 
   int getRightDest(Tile tile) {
@@ -203,34 +230,35 @@ class Game {
   }
 
   int getBottomDest(Tile tile) {
+    println("Moving tile at ["+str(tile.rowPos)+", "+str(tile.colPos)+"]");
     if (tile.isAtBottomEdge()) {
-      println("Tile at ["+str(tile.rowPos)+", "+str(tile.colPos)+"] is at bottom edge.");
-      println("return"+str(tile.rowPos));
+      //println("Tile at ["+str(tile.rowPos)+", "+str(tile.colPos)+"] is at bottom edge.");
+      //println("return"+str(tile.rowPos));
       return tile.rowPos;
     } else {
-      println("Tile at ["+str(tile.rowPos)+", "+str(tile.colPos)+"] is NOT at bottom edge.");
+      //println("Tile at ["+str(tile.rowPos)+", "+str(tile.colPos)+"] is NOT at bottom edge.");
       int curRow = tile.rowPos + 1;
       while (curRow <= 3) {
-        println("Checking tile at ["+str(curRow)+", "+str(tile.colPos)+"]");
+        //println("Checking tile at ["+str(curRow)+", "+str(tile.colPos)+"]");
         if (grid.checkIfOccupied(curRow, tile.colPos)) {
-          println("Tile at ["+str(curRow)+", "+str(tile.colPos)+"] is occupied.");
+          //println("Tile at ["+str(curRow)+", "+str(tile.colPos)+"] is occupied.");
           int bottomTileID = gridNum*curRow + tile.colPos;
           Tile bottomTile = tiles[bottomTileID];
           if (tile.sameValue(bottomTile)) {
-            println("Tile at ["+str(bottomTile.rowPos)+", "+str(bottomTile.colPos)+"] has the same value.");
-            println("return"+str(curRow));
+            //println("Tile at ["+str(bottomTile.rowPos)+", "+str(bottomTile.colPos)+"] has the same value.");
+            //println("return"+str(curRow));
             return curRow;
           } else {
-            println("Tile at ["+str(bottomTile.rowPos)+", "+str(bottomTile.colPos)+"] has different value.");
-            println("return"+str(curRow-1));
+            //println("Tile at ["+str(bottomTile.rowPos)+", "+str(bottomTile.colPos)+"] has different value.");
+            //println("return"+str(curRow-1));
             return curRow-1;
           }
         } else {
-          println("Tile at ["+str(curRow)+", "+str(tile.colPos)+"] is NOT occupied.");
+          //println("Tile at ["+str(curRow)+", "+str(tile.colPos)+"] is NOT occupied.");
           curRow += 1;
         }
       }
-      println("return"+str(curRow-1));
+      //println("return"+str(curRow-1));
       return curRow-1;
     }
   }

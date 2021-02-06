@@ -84,15 +84,9 @@ class Tile {
    * @return None
    */
   void moveTileH(int destCol) {
-    // Get step size from distance
     float oldX = xPos(colPos);
     float newX = xPos(destCol);
-    // stepSize is computed based on src and dest
-    // to ensure xPos will always reach exactly the new pos
-    // Possible pitfall when stepSize has long decimal part?
-    // Yep that happens. It overshoots the destination by a fraction.
-    // round() works great!
-    float stepSize = (newX-oldX)/30;
+    float stepSize = (newX-oldX)/15;
     if (xPos != newX) {
       xPos += stepSize;
     }
@@ -102,6 +96,7 @@ class Tile {
       moving = false;
       doneMoving = true;
       updateID();
+      println("Done movingH");
     }
   }
 
@@ -109,7 +104,7 @@ class Tile {
     // Get step size from distance
     float oldY = yPos(rowPos);
     float newY = yPos(destRow);
-    float stepSize = (newY-oldY)/30;
+    float stepSize = (newY-oldY)/15;
     //println(yPos, rowPos);
     if (yPos != newY) {
       yPos += stepSize;
@@ -120,6 +115,7 @@ class Tile {
       moving = false;
       doneMoving = true;
       updateID();
+      println("Done movingV");
     }
     //println(yPos, destRow);
   }
