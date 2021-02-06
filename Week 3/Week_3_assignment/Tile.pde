@@ -115,6 +115,7 @@ class Tile {
       rowPos = destRow;
       updateID();
     }
+    println(yPos, destRow);
   }
 
   void updateAlpha() {

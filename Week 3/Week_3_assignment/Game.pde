@@ -5,8 +5,8 @@ class Game {
   int gridNum = 4;
 
   Game() {
-    Tile tile0 = specificTile(4, 0, 0);
-    Tile tile1 = specificTile(4, 0, 3);
+    Tile tile0 = specificTile(4, 3, 0);
+    Tile tile1 = specificTile(2, 0, 1);
     //Tile tile1 = randTile();
     //tiles.add(tile0.tileID, tile0);
     //tiles.add(tile1.tileID, tile1);
@@ -38,13 +38,10 @@ class Game {
     //    }
     //  }
     //}
-    Tile tile = tiles[3];
+    Tile tile = tiles[12];
     tile.displayTile();
-    tiles[0].displayTile();
+    tiles[1].displayTile();
     if (key == CODED) {
-      if (keyCode == UP) {
-        tile.moveTileV(2);
-      }
       if (keyCode == RIGHT) {
         int dest = getRightDest(tile);
         //println("Dest: " + str(dest));
@@ -54,6 +51,11 @@ class Game {
         int dest = getLeftDest(tile);
         //println("Dest: " + str(dest));
         tile.moveTileH(dest);
+      }
+      if (keyCode == UP) {
+        int dest = getTopDest(tile);
+        //println("Dest: " + str(dest));
+        tile.moveTileV(dest);
       }
     }
   }
@@ -141,34 +143,34 @@ class Game {
     }
   }
 
-  //int getRightDest(Tile tile) {
-  //  if (tile.isAtRightEdge()) {
-  //    //println("Tile at ["+str(tile.rowPos)+", "+str(tile.colPos)+"] is at right edge.");
-  //    return tile.colPos;
-  //  } else {
-  //    //println("Tile at ["+str(tile.rowPos)+", "+str(tile.colPos)+"] is NOT at right edge.");
-  //    int curCol = tile.colPos + 1;
-  //    while (curCol <= 3) {
-  //      //println("Checking tile at ["+str(tile.rowPos)+", "+str(curCol)+"]");
-  //      if (grid.checkIfOccupied(tile.rowPos, curCol)) {
-  //        //println("Tile at ["+str(tile.rowPos)+", "+str(curCol)+"] is occupied.");
-  //        int rightTileID = gridNum*tile.rowPos + curCol;
-  //        Tile rightTile = tiles[rightTileID];
-  //        if (tile.sameValue(rightTile)) {
-  //          //println("Tile at ["+str(rightTile.rowPos)+", "+str(rightTile.colPos)+"] has the same value.");
-  //          return curCol;
-  //        } else {
-  //          //println("Tile at ["+str(rightTile.rowPos)+", "+str(rightTile.colPos)+"] has different value.");
-  //          return curCol-1;
-  //        }
-  //      } else {
-  //        //println("Tile at ["+str(tile.rowPos)+", "+str(curCol)+"] is NOT occupied.");
-  //        curCol += 1;
-  //      }
-  //    }
-  //    return curCol-1;
-  //  }
-  //}
+  int getTopDest(Tile tile) {
+    if (tile.isAtTopEdge()) {
+      //println("Tile at ["+str(tile.rowPos)+", "+str(tile.colPos)+"] is at top edge.");
+      return tile.rowPos;
+    } else {
+      //println("Tile at ["+str(tile.rowPos)+", "+str(tile.colPos)+"] is NOT at top edge.");
+      int curRow = tile.rowPos - 1;
+      while (curRow >= 0) {
+        //println("Checking tile at ["+str(tile.rowPos)+", "+str(curCol)+"]");
+        if (grid.checkIfOccupied(curRow, tile.colPos)) {
+          //println("Tile at ["+str(curRow)+", "+str(tile.colPos)+"] is occupied.");
+          int topTileID = gridNum*curRow + tile.colPos;
+          Tile topTile = tiles[topTileID];
+          if (tile.sameValue(topTile)) {
+            //println("Tile at ["+str(topTile.rowPos)+", "+str(topTile.colPos)+"] has the same value.");
+            return curRow;
+          } else {
+            //println("Tile at ["+str(topTile.rowPos)+", "+str(topTile.colPos)+"] has different value.");
+            return curRow+1;
+          }
+        } else {
+          //println("Tile at ["+str(curRow)+", "+str(tile.colPos)+"] is NOT occupied.");
+          curRow -= 1;
+        }
+      }
+      return curRow+1;
+    }
+  }
 
   //int getRightDest(Tile tile) {
   //  if (tile.isAtRightEdge()) {
