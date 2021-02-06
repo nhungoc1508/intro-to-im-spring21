@@ -149,6 +149,14 @@ class Tile {
     return (rowPos+.5)*tileSize + (rowPos+1)*gapSize + yOffset;
   }
   
+  boolean sameValue(Tile tile) {
+    if (value == tile.value) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   boolean isAtTopEdge() {
     if (rowPos == 0) { 
       return true;
@@ -156,25 +164,25 @@ class Tile {
       return false;
     }
   }
-  
-    boolean isAtBottomEdge() {
-    if (rowPos == 4) { 
+
+  boolean isAtBottomEdge() {
+    if (rowPos == 3) { 
       return true;
     } else {
       return false;
     }
   }
-  
-    boolean isAtLeftEdge() {
+
+  boolean isAtLeftEdge() {
     if (colPos == 0) { 
       return true;
     } else {
       return false;
     }
   }
-  
-    boolean isAtRightEdge() {
-    if (colPos == 4) { 
+
+  boolean isAtRightEdge() {
+    if (colPos == 3) { 
       return true;
     } else {
       return false;

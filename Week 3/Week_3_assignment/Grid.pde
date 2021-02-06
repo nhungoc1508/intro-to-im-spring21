@@ -41,13 +41,13 @@ class Grid {
     popStyle();
   }
 
-  boolean checkStatus(int row, int col) {
+  boolean checkIfOccupied(int row, int col) {
     int id = getID(row, col);
     Cell cell = cells.get(id);
     return cell.occupied;
   }
   
-  boolean checkStatus(int id) {
+  boolean checkIfOccupied(int id) {
     Cell cell = cells.get(id);
     return cell.occupied;
   }
@@ -71,7 +71,7 @@ class Grid {
   void occHelper() {
     for (int i=0; i<4; i++) {
       for (int j=0; j<4; j++) {
-        if (checkStatus(i, j)) {
+        if (checkIfOccupied(i, j)) {
           println(i, j);
         }
       }
