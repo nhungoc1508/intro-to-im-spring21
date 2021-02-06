@@ -115,7 +115,6 @@ class Tile {
       moving = false;
       doneMoving = true;
       updateID();
-      println("Done movingV");
     }
     //println(yPos, destRow);
   }

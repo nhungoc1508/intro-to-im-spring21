@@ -64,6 +64,7 @@ class Game {
 
     if (keyHandler.get(DOWN)) {
       moveTileDown(tile1);
+      println(grid.checkCollision(tile1));
       if (tile1.doneMoving) {
         grid.changeStatus(tile);
         moveTileDown(tile);
@@ -80,6 +81,7 @@ class Game {
     }
     Tile tile = new Tile(2, randRow, randCol);
     grid.occupy(tile);
+    grid.addCount(tile);
     grid.setCurrentValue(tile);
     return tile;
   }
@@ -87,6 +89,7 @@ class Game {
   Tile specificTile(int val, int row, int col) {
     Tile tile = new Tile(val, row, col);
     grid.occupy(tile);
+    grid.addCount(tile);
     grid.setCurrentValue(tile);
     return tile;
   }
@@ -132,6 +135,7 @@ class Game {
   void moveTileDown(Tile tile) {
     tile.resetMovement();
     grid.vacant(tile);
+    grid.minusCount(tile);
     tile.moving = true;
     int dest = tile.rowPos;
     if (tile.moving && !tile.doneMoving) {
@@ -139,6 +143,7 @@ class Game {
     }
     tile.moveTileV(dest);
     grid.occupy(tile);
+    grid.addCount(tile);
     tiles[tile.tileID] = tile;
   }
 
@@ -230,7 +235,7 @@ class Game {
   }
 
   int getBottomDest(Tile tile) {
-    println("Moving tile at ["+str(tile.rowPos)+", "+str(tile.colPos)+"]");
+    //println("Moving tile at ["+str(tile.rowPos)+", "+str(tile.colPos)+"]");
     if (tile.isAtBottomEdge()) {
       //println("Tile at ["+str(tile.rowPos)+", "+str(tile.colPos)+"] is at bottom edge.");
       //println("return"+str(tile.rowPos));

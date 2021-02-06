@@ -11,6 +11,7 @@ class Cell {
   int gapSize = 12;
   float xOffset;
   float yOffset;
+  int count = 0;
 
   Cell(int row, int col, float offset_x, float offset_y) {
     rowPos = row;

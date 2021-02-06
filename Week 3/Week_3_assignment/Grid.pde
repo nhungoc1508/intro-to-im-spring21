@@ -69,6 +69,28 @@ class Grid {
     Cell cell = cells.get(id);
     cell.occupied = true;
   }
+  
+  void addCount(Tile tile) {
+    int id = getID(tile.rowPos, tile.colPos);
+    Cell cell = cells.get(id);
+    cell.count += 1;
+  }
+  
+  void minusCount(Tile tile) {
+    int id = getID(tile.rowPos, tile.colPos);
+    Cell cell = cells.get(id);
+    cell.count -= 1;
+  }
+  
+  boolean checkCollision(Tile tile) {
+    int id = getID(tile.rowPos, tile.colPos);
+    Cell cell = cells.get(id);
+    if (cell.count == 2) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   void setCurrentValue(Tile tile) {
     int id = getID(tile.rowPos, tile.colPos);
