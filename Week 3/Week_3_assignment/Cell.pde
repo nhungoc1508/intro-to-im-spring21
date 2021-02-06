@@ -1,3 +1,5 @@
+import java.util.ArrayDeque;
+
 class Cell {
   int gridNum = 4;
   int cellID;
@@ -12,6 +14,7 @@ class Cell {
   float xOffset;
   float yOffset;
   int count = 0;
+  ArrayDeque<Tile> queue = new ArrayDeque();
 
   Cell(int row, int col, float offset_x, float offset_y) {
     rowPos = row;
