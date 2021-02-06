@@ -63,6 +63,12 @@ class Grid {
     Cell cell = cells.get(id);
     cell.occupied = false;
   }
+  
+  void vacant(int id) {
+    //int id = getID(tile.rowPos, tile.colPos);
+    Cell cell = cells.get(id);
+    cell.occupied = false;
+  }
 
   void occupy(Tile tile) {
     int id = getID(tile.rowPos, tile.colPos);
@@ -94,14 +100,14 @@ class Grid {
     return cell.queue.remove();
   }
 
-  Tile peekFirst(Tile tile) {
-    int id = getID(tile.rowPos, tile.colPos);
+  Tile peekFirst(int id) {
+    //int id = getID(tile.rowPos, tile.colPos);
     Cell cell = cells.get(id);
     return cell.queue.peekFirst();
   }
 
-  Tile peekLast(Tile tile) {
-    int id = getID(tile.rowPos, tile.colPos);
+  Tile peekLast(int id) {
+    //int id = getID(tile.rowPos, tile.colPos);
     Cell cell = cells.get(id);
     return cell.queue.peekLast();
   }
@@ -111,8 +117,8 @@ class Grid {
     return cell.queue.peek();
   }
 
-  int queueSize(Tile tile) {
-    int id = getID(tile.rowPos, tile.colPos);
+  int queueSize(int id) {
+    //int id = getID(tile.rowPos, tile.colPos);
     Cell cell = cells.get(id);
     return cell.queue.size();
   }
@@ -125,6 +131,27 @@ class Grid {
     } else {
       return false;
     }
+  }
+  
+  boolean checkCollision() {
+    for (int i=0; i<cells.size(); i++) {
+      Cell cell = cells.get(i);
+      if (cell.queue.size() == 2) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  int whereCollision() {
+    for (int i=0; i<cells.size(); i++) {
+      Cell cell = cells.get(i);
+      if (cell.queue.size() == 2) {
+        println("Collision in: "+str(i));
+        return i;
+      }
+    }
+    return -1;
   }
 
   void setCurrentValue(Tile tile) {

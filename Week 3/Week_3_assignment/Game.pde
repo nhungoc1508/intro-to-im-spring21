@@ -6,6 +6,7 @@ class Game {
   Tile[] tiles = new Tile[16];
   int gridNum = 4;
   HashMap<Integer, Boolean> keyHandler = new HashMap<Integer, Boolean>();
+  Tile tile, tile1;
 
   Game() {
     keyHandler.put(LEFT, false);
@@ -13,10 +14,13 @@ class Game {
     keyHandler.put(UP, false);
     keyHandler.put(DOWN, false);
 
-    Tile tile0 = specificTile(2, 1, 0);
-    Tile tile1 = specificTile(2, 2, 0);
-    tiles[tile0.tileID] = tile0;
-    tiles[tile1.tileID] = tile1;
+    tile = specificTile(2, 1, 0);
+    tile1 = specificTile(2, 2, 0);
+
+    //Tile tile0 = specificTile(2, 1, 0);
+    //Tile tile1 = specificTile(2, 2, 0);
+    //tiles[tile0.tileID] = tile0;
+    //tiles[tile1.tileID] = tile1;
   }
 
   void displayGame() {
@@ -37,13 +41,22 @@ class Game {
     //    }
     //  }
     //}
-    Tile tile = tiles[4];
-    Tile tile1 = tiles[8];
+    //Tile tile = tiles[4];
+    //Tile tile1 = tiles[8];
+
     for (int i=0; i<tiles.length; i++) {
       if (grid.checkIfOccupied(i)) {
-        Tile tile_n = grid.peek(i);
-        tile_n.displayTile();
-        println("Valid: "+str(tile_n.value)+" "+str(tile_n.rowPos)+" "+str(tile_n.colPos)+" "+str(tile_n.alpha));
+        for (int j=0; j<grid.queueSize(i); j++) {
+          println("-------------"+str(j)+"-------------");
+          Tile tile_n;
+          if (j==0) {
+            tile_n = grid.peek(i);
+          } else {
+            tile_n = grid.peekLast(i);
+          }
+          tile_n.displayTile(); //<>//
+          println("Valid: "+str(tile_n.value)+" "+str(tile_n.rowPos)+" "+str(tile_n.colPos)+" "+str(tile_n.alpha));
+        }
       }
     }
     //tile.displayTile();
@@ -81,8 +94,9 @@ class Game {
       if (tile1.doneMoving) {
         moveTileDown(tile);
       }
-      if (grid.checkCollision(tile)) {
-        mergeTiles(tile);
+      if (grid.checkCollision()) {
+        int id = grid.whereCollision();
+        mergeTiles(id);
       }
     }
   }
@@ -184,31 +198,32 @@ class Game {
     //tiles[tile.tileID] = tile;
   }
 
-  void mergeTiles(Tile tile) {
-    println("Size: "+str(grid.queueSize(tile)));
-    int value = tile.value*2;
-    int row = tile.rowPos;
-    int col = tile.colPos;
+  void mergeTiles(int id) {
+    println("Size: "+str(grid.queueSize(id)));
+    int value = grid.peek(id).value*2;
+    int row = grid.peek(id).rowPos;
+    int col = grid.peek(id).colPos;
     //grid.minusCount(tile);
     //grid.minusCount(tile);
     //Tile tile0 = grid.dequeue(tile);
-    Tile tile0 = grid.peekFirst(tile);
+    Tile tile0 = grid.peekFirst(id);
     println("Dequeued: "+str(tile0.tileID));
     tile0.disappear();
     //Tile tile1 = grid.dequeue(tile);
-    Tile tile1 = grid.peekLast(tile);
+    Tile tile1 = grid.peekLast(id);
     println("Dequeued: "+str(tile1.tileID));
     tile1.disappear();
     println("Heeeeeeeeeeere: "+str(tile1.alpha));
     if (tile1.alpha == 0) {
+      grid.minusCount(grid.peek(id));
+      grid.minusCount(grid.peek(id));
+      tile0 = grid.dequeue(grid.peek(id));
+      tile1 = grid.dequeue(grid.peek(id));
+      grid.vacant(id);
       println("I am here");
-      grid.minusCount(tile);
-      grid.minusCount(tile);
-      tile0 = grid.dequeue(tile);
-      tile1 = grid.dequeue(tile);
-      grid.vacant(tile);
-      println("I am here");
-      Tile mergedTile = specificTile(value, row, col);
+      println("Sizeeeeeeee: "+str(grid.queueSize(id)));
+      Tile mergedTile = specificTile(value, row, col); //<>//
+      println("Alpha: "+str(mergedTile.alpha));
       //tiles[mergedTile.tileID] = mergedTile;
     }
   }

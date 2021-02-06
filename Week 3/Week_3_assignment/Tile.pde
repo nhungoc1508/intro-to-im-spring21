@@ -56,6 +56,7 @@ class Tile {
    * @return None
    */
   void displayTile() {
+    println("Visible? "+str(visible));
     // Alpha might get updated so need to map colors again
     mapColors();
     tileColor = tileColorMap.get(value);
@@ -66,7 +67,6 @@ class Tile {
     }
 
     updateAlpha();
-    println("After updateA "+str(doneDisappearing));
     
     pushStyle();
     rectMode(CENTER);
@@ -134,8 +134,6 @@ class Tile {
       if (alpha > 0) {
         alpha -= 17;
       } else {
-        doneDisappearing = true;
-        print(doneDisappearing);
         println("Here?");
         alpha = 0;
       }
