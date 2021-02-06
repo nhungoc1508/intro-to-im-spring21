@@ -71,3 +71,32 @@ void testTile() {
 
   //tile3.disappear();
 }
+
+void keyPressed() {
+  if (key == CODED) {
+    if (keyCode == RIGHT) {
+      game.keyHandler.put(RIGHT, true);
+      game.keyHandler.put(LEFT, false);
+      game.keyHandler.put(UP, false);
+      game.keyHandler.put(DOWN, false);
+    }
+    if (keyCode == LEFT) {
+      game.keyHandler.put(RIGHT, false);
+      game.keyHandler.put(LEFT, true);
+      game.keyHandler.put(UP, false);
+      game.keyHandler.put(DOWN, false);
+    }
+    if (keyCode == UP) {
+      game.keyHandler.put(RIGHT, false);
+      game.keyHandler.put(LEFT, false);
+      game.keyHandler.put(UP, true);
+      game.keyHandler.put(DOWN, false);
+    }
+    if (keyCode == DOWN) {
+      game.keyHandler.put(RIGHT, false);
+      game.keyHandler.put(LEFT, false);
+      game.keyHandler.put(UP, false);
+      game.keyHandler.put(DOWN, true);
+    }
+  }
+}

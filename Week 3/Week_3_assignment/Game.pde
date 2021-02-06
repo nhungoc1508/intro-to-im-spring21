@@ -8,6 +8,11 @@ class Game {
   HashMap<Integer, Boolean> keyHandler = new HashMap<Integer, Boolean>();
 
   Game() {
+    keyHandler.put(LEFT, false);
+    keyHandler.put(RIGHT, false);
+    keyHandler.put(UP, false);
+    keyHandler.put(DOWN, false);
+
     Tile tile0 = specificTile(2, 0, 0);
     Tile tile1 = specificTile(2, 2, 0);
     //Tile tile1 = randTile();
@@ -43,30 +48,14 @@ class Game {
     Tile tile = tiles[0];
     tile.displayTile();
     tiles[8].displayTile();
-    if (key == CODED) {
-      if (keyCode == RIGHT) {
-        int dest = getRightDest(tile);
-        //println("Dest: " + str(dest));
-        tile.moveTileH(dest);
+
+    if (keyHandler.get(DOWN)) {
+      tile.moving = true;
+      int dest = tile.rowPos;
+      if (tile.moving && !tile.doneMoving) {
+        dest = getBottomDest(tile);
       }
-      if (keyCode == LEFT) {
-        int dest = getLeftDest(tile);
-        //println("Dest: " + str(dest));
-        tile.moveTileH(dest);
-      }
-      if (keyCode == UP) {
-        int dest = getTopDest(tile);
-        //println("Dest: " + str(dest));
-        tile.moveTileV(dest);
-      }
-      if (keyCode == DOWN) {
-        tile.moving = true;
-        while (tile.moving) {
-          int dest = getBottomDest(tile);
-          //println("Dest: " + str(dest));
-          tile.moveTileV(dest);
-        }
-      }
+      tile.moveTileV(dest);
     }
   }
 
