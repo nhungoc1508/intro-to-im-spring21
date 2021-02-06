@@ -5,8 +5,8 @@ class Game {
   int gridNum = 4;
 
   Game() {
-    Tile tile0 = specificTile(2, 0, 1);
-    Tile tile1 = specificTile(2, 0, 3);
+    Tile tile0 = specificTile(2, 0, 0);
+    Tile tile1 = specificTile(4, 0, 2);
     //Tile tile1 = randTile();
     //tiles.add(tile0.tileID, tile0);
     //tiles.add(tile1.tileID, tile1);
@@ -21,21 +21,34 @@ class Game {
   }
 
   void displayTiles() {
-    for (int i=0; i<tiles.length; i++) {
-      if (grid.checkIfOccupied(i)) {
-        Tile tile = tiles[i];
-        tile.displayTile();
+    //for (int i=0; i<tiles.length; i++) {
+    //  if (grid.checkIfOccupied(i)) {
+    //    Tile tile = tiles[i];
+    //    tile.displayTile();
 
-        if (key == CODED) {
-          if (keyCode == UP) {
-            tile.moveTileV(2);
-          }
-          if (keyCode == RIGHT) {
-            int dest = getRightDest(tile);
-            println("Dest: " + str(dest));
-            tile.moveTileH(dest);
-          }
-        }
+    //    if (key == CODED) {
+    //      if (keyCode == UP) {
+    //        tile.moveTileV(2);
+    //      }
+    //      if (keyCode == RIGHT) {
+    //        int dest = getRightDest(tile);
+    //        println("Dest: " + str(dest));
+    //        tile.moveTileH(dest);
+    //      }
+    //    }
+    //  }
+    //}
+    Tile tile = tiles[0];
+    tile.displayTile();
+    tiles[2].displayTile();
+    if (key == CODED) {
+      if (keyCode == UP) {
+        tile.moveTileV(2);
+      }
+      if (keyCode == RIGHT) {
+        int dest = getRightDest(tile);
+        println("Dest: " + str(dest));
+        tile.moveTileH(dest);
       }
     }
   }
@@ -83,7 +96,7 @@ class Game {
             return curCol;
           } else {
             println("Tile at ["+str(rightTile.rowPos)+", "+str(rightTile.colPos)+"] has different value.");
-            return tile.colPos;
+            return curCol-1;
           }
         } else {
           println("Tile at ["+str(tile.rowPos)+", "+str(curCol)+"] is NOT occupied.");
