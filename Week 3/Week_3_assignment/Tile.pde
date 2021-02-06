@@ -66,6 +66,8 @@ class Tile {
     }
 
     updateAlpha();
+    println("After updateA "+str(doneDisappearing));
+    
     pushStyle();
     rectMode(CENTER);
     noStroke();
@@ -133,6 +135,8 @@ class Tile {
         alpha -= 17;
       } else {
         doneDisappearing = true;
+        print(doneDisappearing);
+        println("Here?");
         alpha = 0;
       }
     }
@@ -153,7 +157,7 @@ class Tile {
   float yPos(int rowPos) {
     return (rowPos+.5)*tileSize + (rowPos+1)*gapSize + yOffset;
   }
-  
+
   boolean sameValue(Tile tile) {
     if (value == tile.value) {
       return true;
@@ -193,7 +197,7 @@ class Tile {
       return false;
     }
   }
-  
+
   void resetMovement() {
     moving = false;
     doneMoving = false;

@@ -69,48 +69,54 @@ class Grid {
     Cell cell = cells.get(id);
     cell.occupied = true;
   }
-  
+
   void addCount(Tile tile) {
     int id = getID(tile.rowPos, tile.colPos);
     Cell cell = cells.get(id);
     cell.count += 1;
   }
-  
+
   void minusCount(Tile tile) {
     int id = getID(tile.rowPos, tile.colPos);
     Cell cell = cells.get(id);
     cell.count -= 1;
   }
-  
+
   void enqueue(Tile tile) {
     int id = getID(tile.rowPos, tile.colPos);
     Cell cell = cells.get(id);
     cell.queue.add(tile);
   }
-  
+
   Tile dequeue(Tile tile) {
     int id = getID(tile.rowPos, tile.colPos);
     Cell cell = cells.get(id);
     return cell.queue.remove();
   }
-  
+
   Tile peekFirst(Tile tile) {
     int id = getID(tile.rowPos, tile.colPos);
     Cell cell = cells.get(id);
     return cell.queue.peekFirst();
   }
-  
+
   Tile peekLast(Tile tile) {
     int id = getID(tile.rowPos, tile.colPos);
     Cell cell = cells.get(id);
     return cell.queue.peekLast();
   }
-  
+
   Tile peek(int id) {
     Cell cell = cells.get(id);
     return cell.queue.peek();
   }
-  
+
+  int queueSize(Tile tile) {
+    int id = getID(tile.rowPos, tile.colPos);
+    Cell cell = cells.get(id);
+    return cell.queue.size();
+  }
+
   boolean checkCollision(Tile tile) {
     int id = getID(tile.rowPos, tile.colPos);
     Cell cell = cells.get(id);

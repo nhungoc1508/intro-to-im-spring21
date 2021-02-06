@@ -185,11 +185,12 @@ class Game {
   }
 
   void mergeTiles(Tile tile) {
+    println("Size: "+str(grid.queueSize(tile)));
     int value = tile.value*2;
     int row = tile.rowPos;
     int col = tile.colPos;
-    grid.minusCount(tile);
-    grid.minusCount(tile);
+    //grid.minusCount(tile);
+    //grid.minusCount(tile);
     //Tile tile0 = grid.dequeue(tile);
     Tile tile0 = grid.peekFirst(tile);
     println("Dequeued: "+str(tile0.tileID));
@@ -198,13 +199,17 @@ class Game {
     Tile tile1 = grid.peekLast(tile);
     println("Dequeued: "+str(tile1.tileID));
     tile1.disappear();
-    if (tile1.doneDisappearing) {
+    println("Heeeeeeeeeeere: "+str(tile1.alpha));
+    if (tile1.alpha == 0) {
+      println("I am here");
+      grid.minusCount(tile);
+      grid.minusCount(tile);
       tile0 = grid.dequeue(tile);
       tile1 = grid.dequeue(tile);
       grid.vacant(tile);
       println("I am here");
       Tile mergedTile = specificTile(value, row, col);
-      tiles[mergedTile.tileID] = mergedTile;
+      //tiles[mergedTile.tileID] = mergedTile;
     }
   }
 
