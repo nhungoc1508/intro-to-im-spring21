@@ -82,6 +82,18 @@ class Grid {
     cell.count -= 1;
   }
   
+  void enqueue(Tile tile) {
+    int id = getID(tile.rowPos, tile.colPos);
+    Cell cell = cells.get(id);
+    cell.queue.add(tile);
+  }
+  
+  Tile dequeue(Tile tile) {
+    int id = getID(tile.rowPos, tile.colPos);
+    Cell cell = cells.get(id);
+    return cell.queue.remove();
+  }
+  
   boolean checkCollision(Tile tile) {
     int id = getID(tile.rowPos, tile.colPos);
     Cell cell = cells.get(id);

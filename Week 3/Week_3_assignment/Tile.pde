@@ -96,7 +96,7 @@ class Tile {
       moving = false;
       doneMoving = true;
       updateID();
-      println("Done movingH");
+      //println("Done movingH");
     }
   }
 

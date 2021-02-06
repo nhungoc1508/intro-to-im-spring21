@@ -52,14 +52,29 @@ class Game {
 
     if (keyHandler.get(RIGHT)) {
       moveTileRight(tile);
+      println(grid.checkCollision(tile));
+      if (tile.doneMoving) {
+        grid.changeStatus(tile1);
+        moveTileRight(tile1);
+      }
     }
 
     if (keyHandler.get(LEFT)) {
       moveTileLeft(tile);
+      println(grid.checkCollision(tile));
+      if (tile.doneMoving) {
+        grid.changeStatus(tile1);
+        moveTileLeft(tile1);
+      }
     }
 
     if (keyHandler.get(UP)) {
       moveTileUp(tile);
+      println(grid.checkCollision(tile));
+      if (tile.doneMoving) {
+        grid.changeStatus(tile1);
+        moveTileUp(tile1);
+      }
     }
 
     if (keyHandler.get(DOWN)) {
@@ -82,6 +97,7 @@ class Game {
     Tile tile = new Tile(2, randRow, randCol);
     grid.occupy(tile);
     grid.addCount(tile);
+    grid.enqueue(tile);
     grid.setCurrentValue(tile);
     return tile;
   }
@@ -90,6 +106,7 @@ class Game {
     Tile tile = new Tile(val, row, col);
     grid.occupy(tile);
     grid.addCount(tile);
+    grid.enqueue(tile);
     grid.setCurrentValue(tile);
     return tile;
   }
@@ -100,42 +117,77 @@ class Game {
   }
 
   void moveTileRight(Tile tile) {
+    //tile.resetMovement();
+    //grid.changeStatus(tile);
+    //tile.moving = true;
+    //int dest = tile.colPos;
+    //if (tile.moving && !tile.doneMoving) {
+    //  dest = getRightDest(tile);
+    //}
+    //tile.moveTileH(dest);
     tile.resetMovement();
-    grid.changeStatus(tile);
+    grid.vacant(tile);
+    grid.minusCount(tile);
+    grid.dequeue(tile);
     tile.moving = true;
     int dest = tile.colPos;
     if (tile.moving && !tile.doneMoving) {
       dest = getRightDest(tile);
     }
     tile.moveTileH(dest);
+    grid.occupy(tile);
+    grid.addCount(tile);
+    grid.enqueue(tile);
+    tiles[tile.tileID] = tile;
   }
 
   void moveTileLeft(Tile tile) {
+    //tile.resetMovement();
+    //grid.changeStatus(tile);
+    //tile.moving = true;
+    //int dest = tile.colPos;
+    //if (tile.moving && !tile.doneMoving) {
+    //  dest = getLeftDest(tile);
+    //}
+    //tile.moveTileH(dest);
     tile.resetMovement();
-    grid.changeStatus(tile);
+    grid.vacant(tile);
+    grid.minusCount(tile);
+    grid.dequeue(tile);
     tile.moving = true;
     int dest = tile.colPos;
     if (tile.moving && !tile.doneMoving) {
       dest = getLeftDest(tile);
     }
     tile.moveTileH(dest);
+    grid.occupy(tile);
+    grid.addCount(tile);
+    grid.enqueue(tile);
+    tiles[tile.tileID] = tile;
   }
 
   void moveTileUp(Tile tile) {
     tile.resetMovement();
-    grid.changeStatus(tile);
+    grid.vacant(tile);
+    grid.minusCount(tile);
+    grid.dequeue(tile);
     tile.moving = true;
     int dest = tile.rowPos;
     if (tile.moving && !tile.doneMoving) {
       dest = getTopDest(tile);
     }
     tile.moveTileV(dest);
+    grid.occupy(tile);
+    grid.addCount(tile);
+    grid.enqueue(tile);
+    tiles[tile.tileID] = tile;
   }
 
   void moveTileDown(Tile tile) {
     tile.resetMovement();
     grid.vacant(tile);
     grid.minusCount(tile);
+    grid.dequeue(tile);
     tile.moving = true;
     int dest = tile.rowPos;
     if (tile.moving && !tile.doneMoving) {
@@ -144,6 +196,7 @@ class Game {
     tile.moveTileV(dest);
     grid.occupy(tile);
     grid.addCount(tile);
+    grid.enqueue(tile);
     tiles[tile.tileID] = tile;
   }
 
