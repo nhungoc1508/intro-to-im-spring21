@@ -33,6 +33,15 @@ class Game {
     if (keyHandler.get(RIGHT)) {
       moveGameRight();
     }
+    if (keyHandler.get(LEFT)) {
+      moveGameLeft();
+    }
+    if (keyHandler.get(UP)) {
+      moveGameUp();
+    }
+    if (keyHandler.get(DOWN)) {
+      moveGameDown();
+    }
     //println("Moving right? "+str(keyHandler.get(RIGHT)));
   }
 
@@ -58,19 +67,71 @@ class Game {
     }
   }
 
-  void moveTilesFromRight(ArrayDeque<Tile> queue) {
+  void enqueueTilesFromLeft(ArrayDeque<Tile> queue, int row) {
+    queue.clear();
+    // Add tiles
+    for (int i=0; i<4; i++) {
+      int id = grid.getID(row, i);
+      if (grid.checkIfOccupied(id)) {
+        Tile curTile = grid.peek(id);
+        queue.add(curTile);
+      }
+    }
+  }
+
+  void enqueueTilesFromTop(ArrayDeque<Tile> queue, int col) {
+    queue.clear();
+    // Add tiles
+    for (int i=0; i<4; i++) {
+      int id = grid.getID(i, col);
+      if (grid.checkIfOccupied(id)) {
+        Tile curTile = grid.peek(id);
+        queue.add(curTile);
+      }
+    }
+  }
+
+  void enqueueTilesFromBottom(ArrayDeque<Tile> queue, int col) {
+    queue.clear();
+    // Add tiles
+    for (int i=3; i>=0; i--) {
+      int id = grid.getID(i, col);
+      if (grid.checkIfOccupied(id)) {
+        Tile curTile = grid.peek(id);
+        queue.add(curTile);
+      }
+    }
+  }
+
+  void moveTilesFromQueue(ArrayDeque<Tile> queue, String dir) {
     if (!queue.isEmpty()) {
       boolean lastTileDone = false;
       int sizeQueue = queue.size();
       Tile curTile = queue.remove();
-      moveTileRight(curTile);
+      if (dir == "RIGHT") {
+        moveTileRight(curTile);
+      } else if (dir == "LEFT") {
+        moveTileLeft(curTile);
+      } else if (dir == "UP") {
+        moveTileUp(curTile);
+      } else if (dir == "DOWN") {
+        moveTileDown(curTile);
+      }
       if (curTile.doneMoving) {
         lastTileDone = true;
       }
       for (int i=0; i<sizeQueue-1; i++) {
         if (lastTileDone == true) {
           curTile = queue.remove();
-          moveTileRight(curTile);
+          if (dir == "RIGHT") {
+            moveTileRight(curTile);
+          } else if (dir == "LEFT") {
+            moveTileLeft(curTile);
+          } else if (dir == "UP") {
+            moveTileUp(curTile);
+          } else if (dir == "DOWN") {
+            moveTileDown(curTile);
+          }
           if (!curTile.doneMoving) {
             lastTileDone = false;
           }
@@ -84,23 +145,47 @@ class Game {
     enqueueTilesFromRight(queue1, 1);
     enqueueTilesFromRight(queue2, 2);
     enqueueTilesFromRight(queue3, 3);
-    print("Before: ");
-    println(str(queue0.size()), str(queue1.size()), str(queue2.size()), str(queue3.size()));
-    moveTilesFromRight(queue0);
-    moveTilesFromRight(queue1);
-    moveTilesFromRight(queue2);
-    moveTilesFromRight(queue3);
-    println(str(queue0.size()), str(queue1.size()), str(queue2.size()), str(queue3.size()));
+    moveTilesFromQueue(queue0, "RIGHT");
+    moveTilesFromQueue(queue1, "RIGHT");
+    moveTilesFromQueue(queue2, "RIGHT");
+    moveTilesFromQueue(queue3, "RIGHT");
     lockMovement();
   }
 
-  boolean queueDoneMoving(ArrayDeque<Tile> queue) {
-    for (Tile curTile : queue) {
-      if (!curTile.doneMoving) {
-        return false;
-      }
-    }
-    return true;
+  void moveGameLeft() {
+    enqueueTilesFromLeft(queue0, 0);
+    enqueueTilesFromLeft(queue1, 1);
+    enqueueTilesFromLeft(queue2, 2);
+    enqueueTilesFromLeft(queue3, 3);
+    moveTilesFromQueue(queue0, "LEFT");
+    moveTilesFromQueue(queue1, "LEFT");
+    moveTilesFromQueue(queue2, "LEFT");
+    moveTilesFromQueue(queue3, "LEFT");
+    lockMovement();
+  }
+
+  void moveGameUp() {
+    enqueueTilesFromTop(queue0, 0);
+    enqueueTilesFromTop(queue1, 1);
+    enqueueTilesFromTop(queue2, 2);
+    enqueueTilesFromTop(queue3, 3);
+    moveTilesFromQueue(queue0, "UP");
+    moveTilesFromQueue(queue1, "UP");
+    moveTilesFromQueue(queue2, "UP");
+    moveTilesFromQueue(queue3, "UP");
+    lockMovement();
+  }
+
+  void moveGameDown() {
+    enqueueTilesFromBottom(queue0, 0);
+    enqueueTilesFromBottom(queue1, 1);
+    enqueueTilesFromBottom(queue2, 2);
+    enqueueTilesFromBottom(queue3, 3);
+    moveTilesFromQueue(queue0, "DOWN");
+    moveTilesFromQueue(queue1, "DOWN");
+    moveTilesFromQueue(queue2, "DOWN");
+    moveTilesFromQueue(queue3, "DOWN");
+    lockMovement();
   }
 
   boolean allDoneMoving() {
@@ -116,14 +201,11 @@ class Game {
   }
 
   void lockMovement() {
-    //if (queueDoneMoving(queue0) &&
-    //  queueDoneMoving(queue1) &&
-    //  queueDoneMoving(queue2) &&
-    //  queueDoneMoving(queue3)) {
-    //  keyHandler.put(RIGHT, false);
-    //}
     if (allDoneMoving()) {
       keyHandler.put(RIGHT, false);
+      keyHandler.put(LEFT, false);
+      keyHandler.put(UP, false);
+      keyHandler.put(DOWN, false);
     }
   }
 
