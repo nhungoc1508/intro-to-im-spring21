@@ -1,4 +1,5 @@
 import java.util.Map;
+// https://processing.org/reference/HashMap.html
 
 class Tile {
   int value;
@@ -18,15 +19,12 @@ class Tile {
   float xOffset = width/2 - (gapSize*2.5 + tileSize*2);
   // yOffset might + extra offset to account for the score part
   float yOffset = height/2 - (gapSize*2.5 + tileSize*2);
-
   int gridNum = 4;
   int tileID;
 
   /**
    * Map tile values with corresponding colors in pairs of <Value, Color>
-   * Note: wrap class of color primitive type is Integer
-   * @param  None
-   * @return None
+   * Note: wrapper class of color primitive type is Integer
    */
   void mapColors() {
     tileColorMap.put(2, color(238, 228, 218, alpha));
@@ -42,6 +40,12 @@ class Tile {
     tileColorMap.put(2048, color(237, 194, 45, alpha));
   }
 
+  /**
+   * Constructor of a tile
+   * @param val value of the tile, must be of a value 2^n with 1 <= n <= 11
+   *        row, col coordinate of the tile
+   * [0, 0] is top left, [3, 3] is bottom right
+   */
   Tile(int val, int row, int col) {
     value = val;
     rowPos = row;
@@ -53,13 +57,12 @@ class Tile {
 
   /**
    * Display a particular tile. Necessary params are all class attributes
-   * @param  None
-   * @return None
    */
   void displayTile() {
     // Alpha might get updated so need to map colors again
     mapColors();
     tileColor = tileColorMap.get(value);
+    // There are only two colors for text so no need for HashMap
     if (value <= 4) {
       textColor = color(119, 110, 101, alpha);
     } else {
@@ -67,7 +70,7 @@ class Tile {
     }
 
     updateAlpha();
-    
+
     pushStyle();
     rectMode(CENTER);
     noStroke();
@@ -82,9 +85,8 @@ class Tile {
   }
 
   /**
-   * Move tile to a new position
-   * @param destRow, destCol: coordinates of destination
-   * @return None
+   * Move tile horizontally to a new position
+   * @param destCol column-coordinate of destination
    */
   void moveTileH(int destCol) {
     float oldX = xPos(colPos);
@@ -93,6 +95,8 @@ class Tile {
     if (xPos != newX) {
       xPos += stepSize;
     }
+    // stepSize can have long decimal part
+    // Without rounding, xPos can offshoot newX by a fraction
     if (round(xPos) == newX) {
       xPos = newX;
       colPos = destCol;
@@ -102,6 +106,10 @@ class Tile {
     }
   }
 
+  /**
+   * Move tile vertically to a new position
+   * @param destRow row-coordinate of destination
+   */
   void moveTileV(int destRow) {
     float oldY = yPos(rowPos);
     float newY = yPos(destRow);
@@ -118,40 +126,65 @@ class Tile {
     }
   }
 
+  /**
+   * Change transparency of a tile. Used to make tile (dis)appear
+   */
   void updateAlpha() {
     if (visible) {
-      //if (alpha < 255) {
-      //  alpha += 17; // 17=255/15 (15, 30, 60 ...)
-      //} else {
-      //  alpha = 255;
-      //}
+      if (alpha < 255) {
+        alpha += 17; // 17=255/15 (15, 30, 60 ...)
+      } else {
+        alpha = 255;
+      }
       alpha = 255;
     } else {
       if (alpha > 0) {
         alpha -= 17;
       } else {
-        println("Here?");
         alpha = 0;
       }
     }
   }
 
+  /**
+   * Update visibility of a tile to trigger its disappearing
+   */
   void disappear() {
     visible = false;
   }
 
+  /**
+   * Update ID of a recently moved tile
+   * So far not used much because it's too simple a calculation
+   * I forget I made a function
+   */
   void updateID() {
     tileID = gridNum*rowPos+colPos;
   }
 
+  /**
+   * Return the x-coordinate of a tile in pixels
+   * @param colPos column coordinate (0, 1, 2, 3)
+   * @return xPos corresponding x-coordinate in pixels
+   */
   float xPos(int colPos) {
     return (colPos+.5)*tileSize + (colPos+1)*gapSize + xOffset;
   }
 
+  /**
+   * Return the y-coordinate of a tile in pixels
+   * @param rowPos row coordinate (0, 1, 2, 3)
+   * @return yPos corresponding y-coordinate in pixels
+   */
   float yPos(int rowPos) {
     return (rowPos+.5)*tileSize + (rowPos+1)*gapSize + yOffset;
   }
 
+  /**
+   * Check if this tile and another tile has the same value
+   * @param tile a second tile to compare
+   * @return true if same value
+   */
   boolean sameValue(Tile tile) {
     if (value == tile.value) {
       return true;
@@ -160,6 +193,10 @@ class Tile {
     }
   }
 
+  /**
+   * Checks if this tile is at the top edge aka first row
+   * @return true if it is at the top edge
+   */
   boolean isAtTopEdge() {
     if (rowPos == 0) { 
       return true;
@@ -168,6 +205,10 @@ class Tile {
     }
   }
 
+  /**
+   * Checks if this tile is at the bottom edge aka last row
+   * @return true if it is at the bottom edge
+   */
   boolean isAtBottomEdge() {
     if (rowPos == 3) { 
       return true;
@@ -176,6 +217,10 @@ class Tile {
     }
   }
 
+  /**
+   * Checks if this tile is at the left edge aka first column
+   * @return true if it is at the left edge
+   */
   boolean isAtLeftEdge() {
     if (colPos == 0) { 
       return true;
@@ -184,6 +229,10 @@ class Tile {
     }
   }
 
+  /**
+   * Checks if this tile is at the right edge aka last column
+   * @return true if it is at the right edge
+   */
   boolean isAtRightEdge() {
     if (colPos == 3) { 
       return true;
@@ -192,13 +241,19 @@ class Tile {
     }
   }
 
+  /**
+   * Reset movement attributes of the tile
+   * aka not moving & hasn't started moving
+   */
   void resetMovement() {
     moving = false;
     doneMoving = false;
   }
 
+  /**
+   * Misc code for testing purposes
+   */
   void test() {
-    /** Misc code for testing purposes */
     println("Row: "+str(rowPos));
     println("Col: "+str(colPos));
   }
