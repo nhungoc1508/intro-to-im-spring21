@@ -56,7 +56,7 @@ class Tile {
    * @return None
    */
   void displayTile() {
-    println("Visible? "+str(visible));
+    //println("Visible? "+str(visible));
     // Alpha might get updated so need to map colors again
     mapColors();
     tileColor = tileColorMap.get(value);
