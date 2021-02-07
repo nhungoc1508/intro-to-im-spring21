@@ -57,7 +57,6 @@ class Tile {
    * @return None
    */
   void displayTile() {
-    //println("Visible? "+str(visible));
     // Alpha might get updated so need to map colors again
     mapColors();
     tileColor = tileColorMap.get(value);
@@ -100,16 +99,13 @@ class Tile {
       moving = false;
       doneMoving = true;
       updateID();
-      //println("Done movingH");
     }
   }
 
   void moveTileV(int destRow) {
-    // Get step size from distance
     float oldY = yPos(rowPos);
     float newY = yPos(destRow);
     float stepSize = (newY-oldY)/15;
-    //println(yPos, rowPos);
     if (yPos != newY) {
       yPos += stepSize;
     }
@@ -120,7 +116,6 @@ class Tile {
       doneMoving = true;
       updateID();
     }
-    //println(yPos, destRow);
   }
 
   void updateAlpha() {

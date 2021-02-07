@@ -107,19 +107,16 @@ class Grid {
   }
   
   Tile dequeue(int id) {
-    //int id = getID(tile.rowPos, tile.colPos);
     Cell cell = cells.get(id);
     return cell.queue.remove();
   }
 
   Tile peekFirst(int id) {
-    //int id = getID(tile.rowPos, tile.colPos);
     Cell cell = cells.get(id);
     return cell.queue.peekFirst();
   }
 
   Tile peekLast(int id) {
-    //int id = getID(tile.rowPos, tile.colPos);
     Cell cell = cells.get(id);
     return cell.queue.peekLast();
   }
@@ -130,7 +127,6 @@ class Grid {
   }
 
   int queueSize(int id) {
-    //int id = getID(tile.rowPos, tile.colPos);
     Cell cell = cells.get(id);
     return cell.queue.size();
   }
@@ -164,12 +160,6 @@ class Grid {
       }
     }
     return -1;
-  }
-
-  void setCurrentValue(Tile tile) {
-    int id = getID(tile.rowPos, tile.colPos);
-    Cell cell = cells.get(id);
-    cell.currentValue = tile.value;
   }
 
   int getID(int row, int col) {

@@ -3,7 +3,6 @@ import java.util.ArrayDeque;
 class Cell {
   int gridNum = 4;
   int cellID;
-  int currentValue = 0;
   int rowPos, colPos;
   float yPos, xPos;
   color cellColor = color(205, 191, 180, 255);
