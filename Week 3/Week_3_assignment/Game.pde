@@ -30,72 +30,20 @@ class Game {
   void displayGame() {
     grid.displayGrid();
     displayTiles();
-    moveGameRight();
+    if (keyHandler.get(RIGHT)) {
+      moveGameRight();
+    }
+    //println("Moving right? "+str(keyHandler.get(RIGHT)));
   }
 
   void displayTiles() {
-    //for (int i=0; i<tiles.length; i++) {
-    //  if (grid.checkIfOccupied(i)) {
-    //    for (int j=0; j<grid.queueSize(i); j++) {
-    //      println("-------------"+str(j)+"-------------");
-    //      Tile tile_n;
-    //      if (j==0) {
-    //        tile_n = grid.peek(i);
-    //      } else {
-    //        tile_n = grid.peekLast(i);
-    //      }
-    //      tile_n.displayTile();
-    //      println("Valid: "+str(tile_n.value)+" "+str(tile_n.rowPos)+" "+str(tile_n.colPos)+" "+str(tile_n.alpha));
-    //    }
-    //  }
-    //}
-    //tile.displayTile();
-    //tile1.displayTile();
     for (int i=0; i<numTiles; i++) {
       if (grid.checkIfOccupied(i)) {
         Tile curTile = grid.peek(i);
-        println("Displaying: "+str(i));
+        println("Displaying: "+str(i)+" "+str(curTile.doneMoving));
         curTile.displayTile();
       }
     }
-
-    //if (keyHandler.get(RIGHT)) {
-    //  moveTileRight(tile);
-    //  println(grid.checkCollision(tile));
-    //  if (tile.doneMoving) {
-    //    grid.changeStatus(tile1);
-    //    moveTileRight(tile1);
-    //  }
-    //}
-
-    //if (keyHandler.get(LEFT)) {
-    //  moveTileLeft(tile);
-    //  println(grid.checkCollision(tile));
-    //  if (tile.doneMoving) {
-    //    grid.changeStatus(tile1);
-    //    moveTileLeft(tile1);
-    //  }
-    //}
-
-    //if (keyHandler.get(UP)) {
-    //  moveTileUp(tile);
-    //  println(grid.checkCollision(tile));
-    //  if (tile.doneMoving) {
-    //    grid.changeStatus(tile1);
-    //    moveTileUp(tile1);
-    //  }
-    //}
-
-    //if (keyHandler.get(DOWN)) {
-    //  moveTileDown(tile1);
-    //  if (tile1.doneMoving) {
-    //    moveTileDown(tile);
-    //  }
-    //  if (grid.checkCollision()) {
-    //    int id = grid.whereCollision();
-    //    mergeTiles(id);
-    //  }
-    //}
   }
 
   void enqueueTilesFromRight(ArrayDeque<Tile> queue, int row) {
@@ -136,41 +84,47 @@ class Game {
     enqueueTilesFromRight(queue1, 1);
     enqueueTilesFromRight(queue2, 2);
     enqueueTilesFromRight(queue3, 3);
+    print("Before: ");
     println(str(queue0.size()), str(queue1.size()), str(queue2.size()), str(queue3.size()));
     moveTilesFromRight(queue0);
     moveTilesFromRight(queue1);
     moveTilesFromRight(queue2);
     moveTilesFromRight(queue3);
-    // queue0 - first row
-    //queue0.clear();
-    //// Add tiles
-    //for (int i=3; i>=0; i--) {
-    //  int id = grid.getID(0, i);
-    //  if (grid.checkIfOccupied(id)) {
-    //    Tile curTile = grid.peek(id);
-    //    queue0.add(curTile);
-    //  }
-    //}
+    println(str(queue0.size()), str(queue1.size()), str(queue2.size()), str(queue3.size()));
+    lockMovement();
+  }
 
-    // Move tiles
-    //if (!queue0.isEmpty()) {
-    //  boolean lastTileDone = false;
-    //  int sizeQueue = queue0.size();
-    //  Tile curTile = queue0.remove();
-    //  moveTileRight(curTile);
-    //  if (curTile.doneMoving) {
-    //    lastTileDone = true;
-    //  }
-    //  for (int i=0; i<sizeQueue-1; i++) {
-    //    if (lastTileDone == true) {
-    //      curTile = queue0.remove();
-    //      moveTileRight(curTile);
-    //      if (!curTile.doneMoving) {
-    //        lastTileDone = false;
-    //      }
-    //    }
-    //  }
+  boolean queueDoneMoving(ArrayDeque<Tile> queue) {
+    for (Tile curTile : queue) {
+      if (!curTile.doneMoving) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  boolean allDoneMoving() {
+    for (int i=0; i<numTiles; i++) {
+      if (grid.checkIfOccupied(i)) {
+        Tile curTile = grid.peek(i);
+        if (!curTile.doneMoving) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  void lockMovement() {
+    //if (queueDoneMoving(queue0) &&
+    //  queueDoneMoving(queue1) &&
+    //  queueDoneMoving(queue2) &&
+    //  queueDoneMoving(queue3)) {
+    //  keyHandler.put(RIGHT, false);
     //}
+    if (allDoneMoving()) {
+      keyHandler.put(RIGHT, false);
+    }
   }
 
   void randTile() {
