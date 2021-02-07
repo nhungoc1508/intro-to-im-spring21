@@ -45,17 +45,18 @@ class Game {
     if (allDoneMoving()) {
       randTile();
     }
-    //println("Moving right? "+str(keyHandler.get(RIGHT)));
   }
 
   void displayTiles() {
+    int validTiles = 0;
     for (int i=0; i<numTiles; i++) {
       if (grid.checkIfOccupied(i)) {
         Tile curTile = grid.peek(i);
-        println("Displaying: "+str(i)+" "+str(curTile.doneMoving));
+        validTiles += 1;
         curTile.displayTile();
       }
     }
+    println("Displaying: "+str(validTiles));
   }
 
   void enqueueTilesFromRight(ArrayDeque<Tile> queue, int row) {
@@ -354,7 +355,7 @@ class Game {
           Tile rightTile = tiles[rightTileID];
           if (tile.sameValue(rightTile)) {
             //println("Tile at ["+str(rightTile.rowPos)+", "+str(rightTile.colPos)+"] has the same value.");
-            return curCol;
+            return curCol-1; // ADDED -1 FOR TESTING
           } else {
             //println("Tile at ["+str(rightTile.rowPos)+", "+str(rightTile.colPos)+"] has different value.");
             return curCol-1;
@@ -383,7 +384,7 @@ class Game {
           Tile leftTile = tiles[leftTileID];
           if (tile.sameValue(leftTile)) {
             //println("Tile at ["+str(leftTile.rowPos)+", "+str(leftTile.colPos)+"] has the same value.");
-            return curCol;
+            return curCol+1; // ADDED +1 FOR TESTING
           } else {
             //println("Tile at ["+str(leftTile.rowPos)+", "+str(leftTile.colPos)+"] has different value.");
             return curCol+1;
@@ -412,7 +413,7 @@ class Game {
           Tile topTile = tiles[topTileID];
           if (tile.sameValue(topTile)) {
             //println("Tile at ["+str(topTile.rowPos)+", "+str(topTile.colPos)+"] has the same value.");
-            return curRow;
+            return curRow+1; // ADDED +1 FOR TESTING
           } else {
             //println("Tile at ["+str(topTile.rowPos)+", "+str(topTile.colPos)+"] has different value.");
             return curRow+1;
@@ -445,7 +446,7 @@ class Game {
           if (tile.sameValue(bottomTile)) {
             //println("Tile at ["+str(bottomTile.rowPos)+", "+str(bottomTile.colPos)+"] has the same value.");
             //println("return"+str(curRow));
-            return curRow;
+            return curRow-1; // ADDED -1 FOR TESTING
           } else {
             //println("Tile at ["+str(bottomTile.rowPos)+", "+str(bottomTile.colPos)+"] has different value.");
             //println("return"+str(curRow-1));
