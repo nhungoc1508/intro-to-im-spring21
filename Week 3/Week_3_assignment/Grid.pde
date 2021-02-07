@@ -75,6 +75,12 @@ class Grid {
     Cell cell = cells.get(id);
     cell.occupied = true;
   }
+  
+  void occupy(int id) {
+    //int id = getID(tile.rowPos, tile.colPos);
+    Cell cell = cells.get(id);
+    cell.occupied = true;
+  }
 
   void addCount(Tile tile) {
     int id = getID(tile.rowPos, tile.colPos);
@@ -96,6 +102,12 @@ class Grid {
 
   Tile dequeue(Tile tile) {
     int id = getID(tile.rowPos, tile.colPos);
+    Cell cell = cells.get(id);
+    return cell.queue.remove();
+  }
+  
+  Tile dequeue(int id) {
+    //int id = getID(tile.rowPos, tile.colPos);
     Cell cell = cells.get(id);
     return cell.queue.remove();
   }

@@ -5,6 +5,7 @@ class Tile {
   color tileColor, textColor;
   float alpha = 0;
   boolean doneDisappearing = false;
+  boolean overlap = false;
   boolean visible = true;
   boolean moving = false;
   boolean doneMoving = false;

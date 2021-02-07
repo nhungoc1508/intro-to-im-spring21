@@ -20,11 +20,13 @@ class Game {
     keyHandler.put(UP, false);
     keyHandler.put(DOWN, false);
 
-    specificTile(2, 0, 0);
-    specificTile(4, 0, 1);
-    specificTile(8, 1, 1);
-    specificTile(16, 2, 0);
-    specificTile(64, 3, 1);
+    //specificTile(2, 0, 0);
+    //specificTile(4, 0, 1);
+    //specificTile(8, 1, 1);
+    //specificTile(16, 2, 0);
+    //specificTile(64, 3, 1);
+
+    randTile();
   }
 
   void displayGame() {
@@ -32,18 +34,26 @@ class Game {
     displayTiles();
     if (keyHandler.get(RIGHT)) {
       moveGameRight();
-    }
-    else if (keyHandler.get(LEFT)) {
+    } else if (keyHandler.get(LEFT)) {
       moveGameLeft();
-    }
-    else if (keyHandler.get(UP)) {
+    } else if (keyHandler.get(UP)) {
       moveGameUp();
-    }
-    else if (keyHandler.get(DOWN)) {
+    } else if (keyHandler.get(DOWN)) {
       moveGameDown();
     }
     if (allDoneMoving()) {
+      // This works but in the case of 2 - 2 - 2 for example it's wrong 
+      checkAndMerge();
+
       randTile();
+    }
+  }
+
+  void checkAndMerge() {
+    for (int i=0; i<numTiles; i++) {
+      if (grid.queueSize(i) == 2) {
+        mergeTiles(i);
+      }
     }
   }
 
@@ -310,34 +320,43 @@ class Game {
     //tiles[tile.tileID] = tile;
   }
 
+  //void mergeTiles(int id) {
+  //  println("Size: "+str(grid.queueSize(id)));
+  //  int value = grid.peek(id).value*2;
+  //  int row = grid.peek(id).rowPos;
+  //  int col = grid.peek(id).colPos;
+  //  //grid.minusCount(tile);
+  //  //grid.minusCount(tile);
+  //  //Tile tile0 = grid.dequeue(tile);
+  //  Tile tile0 = grid.peekFirst(id);
+  //  println("Dequeued: "+str(tile0.tileID));
+  //  tile0.disappear();
+  //  //Tile tile1 = grid.dequeue(tile);
+  //  Tile tile1 = grid.peekLast(id);
+  //  println("Dequeued: "+str(tile1.tileID));
+  //  tile1.disappear();
+  //  println("Heeeeeeeeeeere: "+str(tile1.alpha));
+  //  if (tile1.alpha == 0) {
+  //    grid.minusCount(grid.peek(id));
+  //    grid.minusCount(grid.peek(id));
+  //    tile0 = grid.dequeue(grid.peek(id));
+  //    tile1 = grid.dequeue(grid.peek(id));
+  //    grid.vacant(id);
+  //    println("I am here");
+  //    println("Sizeeeeeeee: "+str(grid.queueSize(id)));
+  //    //Tile mergedTile = specificTile(value, row, col);
+  //    //println("Alpha: "+str(mergedTile.alpha));
+  //    //tiles[mergedTile.tileID] = mergedTile;
+  //  }
+  //}
+
   void mergeTiles(int id) {
-    println("Size: "+str(grid.queueSize(id)));
     int value = grid.peek(id).value*2;
     int row = grid.peek(id).rowPos;
     int col = grid.peek(id).colPos;
-    //grid.minusCount(tile);
-    //grid.minusCount(tile);
-    //Tile tile0 = grid.dequeue(tile);
-    Tile tile0 = grid.peekFirst(id);
-    println("Dequeued: "+str(tile0.tileID));
-    tile0.disappear();
-    //Tile tile1 = grid.dequeue(tile);
-    Tile tile1 = grid.peekLast(id);
-    println("Dequeued: "+str(tile1.tileID));
-    tile1.disappear();
-    println("Heeeeeeeeeeere: "+str(tile1.alpha));
-    if (tile1.alpha == 0) {
-      grid.minusCount(grid.peek(id));
-      grid.minusCount(grid.peek(id));
-      tile0 = grid.dequeue(grid.peek(id));
-      tile1 = grid.dequeue(grid.peek(id));
-      grid.vacant(id);
-      println("I am here");
-      println("Sizeeeeeeee: "+str(grid.queueSize(id)));
-      //Tile mergedTile = specificTile(value, row, col);
-      //println("Alpha: "+str(mergedTile.alpha));
-      //tiles[mergedTile.tileID] = mergedTile;
-    }
+    grid.dequeue(id);
+    grid.dequeue(id);
+    specificTile(value, row, col);
   }
 
   int getRightDest(Tile tile) {
@@ -355,7 +374,8 @@ class Game {
           Tile rightTile = tiles[rightTileID];
           if (tile.sameValue(rightTile)) {
             //println("Tile at ["+str(rightTile.rowPos)+", "+str(rightTile.colPos)+"] has the same value.");
-            return curCol-1; // ADDED -1 FOR TESTING
+            tile.overlap = true;
+            return curCol; // ADDED -1 FOR TESTING
           } else {
             //println("Tile at ["+str(rightTile.rowPos)+", "+str(rightTile.colPos)+"] has different value.");
             return curCol-1;
@@ -384,7 +404,7 @@ class Game {
           Tile leftTile = tiles[leftTileID];
           if (tile.sameValue(leftTile)) {
             //println("Tile at ["+str(leftTile.rowPos)+", "+str(leftTile.colPos)+"] has the same value.");
-            return curCol+1; // ADDED +1 FOR TESTING
+            return curCol; // ADDED +1 FOR TESTING
           } else {
             //println("Tile at ["+str(leftTile.rowPos)+", "+str(leftTile.colPos)+"] has different value.");
             return curCol+1;
@@ -413,7 +433,7 @@ class Game {
           Tile topTile = tiles[topTileID];
           if (tile.sameValue(topTile)) {
             //println("Tile at ["+str(topTile.rowPos)+", "+str(topTile.colPos)+"] has the same value.");
-            return curRow+1; // ADDED +1 FOR TESTING
+            return curRow; // ADDED +1 FOR TESTING
           } else {
             //println("Tile at ["+str(topTile.rowPos)+", "+str(topTile.colPos)+"] has different value.");
             return curRow+1;
@@ -446,7 +466,7 @@ class Game {
           if (tile.sameValue(bottomTile)) {
             //println("Tile at ["+str(bottomTile.rowPos)+", "+str(bottomTile.colPos)+"] has the same value.");
             //println("return"+str(curRow));
-            return curRow-1; // ADDED -1 FOR TESTING
+            return curRow; // ADDED -1 FOR TESTING
           } else {
             //println("Tile at ["+str(bottomTile.rowPos)+", "+str(bottomTile.colPos)+"] has different value.");
             //println("return"+str(curRow-1));
