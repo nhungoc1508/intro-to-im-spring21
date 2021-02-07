@@ -33,14 +33,17 @@ class Game {
     if (keyHandler.get(RIGHT)) {
       moveGameRight();
     }
-    if (keyHandler.get(LEFT)) {
+    else if (keyHandler.get(LEFT)) {
       moveGameLeft();
     }
-    if (keyHandler.get(UP)) {
+    else if (keyHandler.get(UP)) {
       moveGameUp();
     }
-    if (keyHandler.get(DOWN)) {
+    else if (keyHandler.get(DOWN)) {
       moveGameDown();
+    }
+    if (allDoneMoving()) {
+      randTile();
     }
     //println("Moving right? "+str(keyHandler.get(RIGHT)));
   }
