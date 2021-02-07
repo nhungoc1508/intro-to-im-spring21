@@ -8,7 +8,7 @@ class Game {
   int gridNum = 4;
   HashMap<Integer, Boolean> keyHandler = new HashMap<Integer, Boolean>();
   Tile tile, tile1;
-  int numTiles = 15;
+  int numTiles = 16;
   ArrayDeque<Tile> queue0 = new ArrayDeque();
   ArrayDeque<Tile> queue1 = new ArrayDeque();
   ArrayDeque<Tile> queue2 = new ArrayDeque();
@@ -22,6 +22,9 @@ class Game {
 
     specificTile(2, 0, 0);
     specificTile(4, 0, 1);
+    specificTile(8, 1, 1);
+    specificTile(16, 2, 0);
+    specificTile(64, 3, 1);
   }
 
   void displayGame() {
@@ -51,6 +54,7 @@ class Game {
     for (int i=0; i<numTiles; i++) {
       if (grid.checkIfOccupied(i)) {
         Tile curTile = grid.peek(i);
+        println("Displaying: "+str(i));
         curTile.displayTile();
       }
     }
@@ -94,30 +98,30 @@ class Game {
     //}
   }
 
-  void moveGameRight() {
-    // queue0 - first row
-    queue0.clear();
+  void enqueueTilesFromRight(ArrayDeque<Tile> queue, int row) {
+    queue.clear();
     // Add tiles
     for (int i=3; i>=0; i--) {
-      int id = grid.getID(0, i);
+      int id = grid.getID(row, i);
       if (grid.checkIfOccupied(id)) {
         Tile curTile = grid.peek(id);
-        queue0.add(curTile);
+        queue.add(curTile);
       }
     }
-    //println(str(queue0.size()), str(queue1.size()), str(queue2.size()), str(queue3.size()));
-    // Move tiles
-    if (!queue0.isEmpty()) {
+  }
+
+  void moveTilesFromRight(ArrayDeque<Tile> queue) {
+    if (!queue.isEmpty()) {
       boolean lastTileDone = false;
-      int sizeQueue = queue0.size();
-      Tile curTile = queue0.remove();
+      int sizeQueue = queue.size();
+      Tile curTile = queue.remove();
       moveTileRight(curTile);
       if (curTile.doneMoving) {
         lastTileDone = true;
       }
       for (int i=0; i<sizeQueue-1; i++) {
         if (lastTileDone == true) {
-          curTile = queue0.remove();
+          curTile = queue.remove();
           moveTileRight(curTile);
           if (!curTile.doneMoving) {
             lastTileDone = false;
@@ -125,6 +129,48 @@ class Game {
         }
       }
     }
+  }
+
+  void moveGameRight() {
+    enqueueTilesFromRight(queue0, 0);
+    enqueueTilesFromRight(queue1, 1);
+    enqueueTilesFromRight(queue2, 2);
+    enqueueTilesFromRight(queue3, 3);
+    println(str(queue0.size()), str(queue1.size()), str(queue2.size()), str(queue3.size()));
+    moveTilesFromRight(queue0);
+    moveTilesFromRight(queue1);
+    moveTilesFromRight(queue2);
+    moveTilesFromRight(queue3);
+    // queue0 - first row
+    //queue0.clear();
+    //// Add tiles
+    //for (int i=3; i>=0; i--) {
+    //  int id = grid.getID(0, i);
+    //  if (grid.checkIfOccupied(id)) {
+    //    Tile curTile = grid.peek(id);
+    //    queue0.add(curTile);
+    //  }
+    //}
+
+    // Move tiles
+    //if (!queue0.isEmpty()) {
+    //  boolean lastTileDone = false;
+    //  int sizeQueue = queue0.size();
+    //  Tile curTile = queue0.remove();
+    //  moveTileRight(curTile);
+    //  if (curTile.doneMoving) {
+    //    lastTileDone = true;
+    //  }
+    //  for (int i=0; i<sizeQueue-1; i++) {
+    //    if (lastTileDone == true) {
+    //      curTile = queue0.remove();
+    //      moveTileRight(curTile);
+    //      if (!curTile.doneMoving) {
+    //        lastTileDone = false;
+    //      }
+    //    }
+    //  }
+    //}
   }
 
   void randTile() {
