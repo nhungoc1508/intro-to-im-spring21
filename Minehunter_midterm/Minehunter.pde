@@ -3,7 +3,6 @@ class Minehunter {
   int numCol = 8;
   int numMines = 8;
   boolean board[][] = new boolean[numRow][numCol];
-  //String mines[] = new String[numMines];
   ArrayList<String> mines = new ArrayList<String>();
   ArrayList<String> minesFound = new ArrayList<String>();
 
@@ -38,7 +37,7 @@ class Minehunter {
         if (i==row && j==col) {
           continue;
         } else {
-          if (0 <= i && i <= numRow && 0 <= j && j <= numCol) {
+          if (0 <= i && i < numRow && 0 <= j && j < numCol) {
             if (board[i][j] == true) {
               count += 1;
             }
@@ -47,6 +46,10 @@ class Minehunter {
       }
     }
     return count;
+  }
+  
+  boolean isMine(int i, int j) {
+    return board[i][j];
   }
   
   boolean gameWon() {
