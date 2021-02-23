@@ -5,7 +5,6 @@ int numRow;
 float monthWidth;
 HashMap<String, Integer> interestByMonth = new HashMap<String, Integer>();
 HashMap<String, ArrayList<Integer>> weekStacked = new HashMap<String, ArrayList<Integer>>();
-HashMap<String, Integer> numOfWeeks = new HashMap<String, Integer>();
 ArrayList<String> nameOfMonths = new ArrayList<String>();
 int maxInterest = 0;
 
@@ -13,7 +12,6 @@ void setup() {
   size(1280, 720);
   loadData();
   breakData();
-  printData();
   monthWidth = width/nameOfMonths.size();
 }
 
@@ -50,11 +48,6 @@ void breakData() {
 
     ArrayList<Integer> listOfWeeks = weekStacked.get(month);
     listOfWeeks.add(interest);
-    weekStacked.put(month, listOfWeeks);
-
-    numOfWeeks.putIfAbsent(month, 0);
-    int oldNumOfWeeks = numOfWeeks.get(month);
-    numOfWeeks.put(month, oldNumOfWeeks+1);
   }
 }
 
@@ -62,16 +55,18 @@ float drawEachMonth(String month, int order) {
   int interest = interestByMonth.get(month);
   float monthHeight = map(interest, 0, 300, 0, height); // the 300 is hardcoded
   float colorFactor = map(interest, 0, 300, 0, 255);
-  color strokeColor = color(colorFactor, 150, 200);
   int alpha = 255;
-  noStroke();
+  stroke(255);
   if (int(mouseX / monthWidth) == order) {
-    stroke(strokeColor);
+    stroke(255);
     alpha = 0;
   }
   fill(colorFactor, 150, 200, alpha);
   rect(order*monthWidth, height-monthHeight, monthWidth, monthHeight);
-  text(month, order*monthWidth, height-monthHeight);
+  textAlign(CENTER);
+  textSize(18);
+  fill(colorFactor, 150, 200);
+  text(month, (order+0.5)*monthWidth, height-monthHeight);
   return monthHeight;
 }
 
@@ -79,7 +74,8 @@ void drawMonths() {
   for (int i=0; i<nameOfMonths.size(); i++) {
     String month = nameOfMonths.get(i);
     float monthHeight = drawEachMonth(month, i);
-    //drawWeeks(month, i, monthHeight);
+    drawWeeks(month, i, monthHeight);
+    float throwaway = drawEachMonth(month, i);
   }
 }
 
@@ -99,40 +95,15 @@ void drawWeeks(String month, int order, float monthHeight) {
 
   for (int i=0; i<numWeek; i++) {
     float aggHeight = 0;
-    for (int j=0; j<i; j++) {
+    for (int j=0; j<=i; j++) {
       aggHeight += weekHeights.get(j);
     }
     String weekLabel = "Week " + str(i+1);
-    fill(0);
+    fill(map(i, 1, numWeek, 0, 255), 150, 200);
     stroke(255);
     rect(order*monthWidth, height-aggHeight, monthWidth, weekHeights.get(i));
-    text(weekLabel, order*monthWidth, height-aggHeight);
+    fill(255);
+    textAlign(CENTER);
+    text(weekLabel, (order+0.5)*monthWidth, height-aggHeight+weekHeights.get(i)*.6);
   }
-
-  for (int i=0; i<numWeek; i++) {
-    println(weekHeights.get(i));
-  }
-  //String weekLabel = "Week " + str(i+1);
-  //fill(0);
-  //stroke(255);
-  //rect(order*monthWidth, height-weekHeight, monthWidth, weekList.get(i));
-  //text(weekLabel, order*monthWidth, height-weekHeight);
-}
-
-void printData() {
-  //for (Map.Entry month : interestByMonth.entrySet()) {
-  //  print(month.getKey() + " ");
-  //  println(month.getValue());
-  //}
-  //for (Map.Entry month : numOfWeeks.entrySet()) {
-  //  print(month.getKey() + " ");
-  //  println(month.getValue());
-  //}
-  //ArrayList<Integer> temp = weekStacked.get("2020-03");
-  //for (int i=0; i<temp.size(); i++) {
-  //  println("Week "+str(i)+": "+str(temp.get(i)));
-  //}
-  //float monthHeight = drawEachMonth("2020-01", 0);
-  //drawWeeks("2020-01", 1, monthHeight);
-  //println("Mouse: "+str(height-mouseX));
 }
