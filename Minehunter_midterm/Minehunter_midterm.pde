@@ -5,6 +5,7 @@ float boardWidth, boardHeight, cellSize;
 color cellColor = color(238, 228, 218);
 color tmpBomb = color(246, 124, 96);
 boolean showingMines = false;
+String screen = "welcome";
 
 void setup() {
   fullScreen();
@@ -12,6 +13,8 @@ void setup() {
   boardHeight = height - (padding * 2);
   cellSize = int(min((boardWidth / boardDim), (boardHeight / boardDim)));
   minehunter = new Minehunter();
+  PFont font = createFont("PixelGameFont.ttf", 32);
+  textFont(font);
 }
 
 void draw() {
@@ -23,6 +26,9 @@ void keyPressed() {
   if (keyPressed) {
     if (key == 'f' || key == 'F') {
       minehunter.changeFlag();
+    }
+    if (key == ' ') {
+      minehunter.revealCell();
     }
   }
 }

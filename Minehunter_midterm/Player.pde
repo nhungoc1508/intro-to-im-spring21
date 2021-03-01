@@ -40,7 +40,7 @@ class Player {
     j = int(y / cellSize);
   }
 
-  void displayPlayer() {
+  void movePlayer() {
     if (keyPressed) {
       if (keyCode == DOWN && y < finBoardSize-midY) {
         direction = 0;
@@ -62,7 +62,9 @@ class Player {
         step = (step+1) % 4;
       }
     }
-
+  }
+   
+  void displayPlayer() {
     imageMode(CENTER);
     image(avatar[direction][step], x, y);
     updateCoordinates();

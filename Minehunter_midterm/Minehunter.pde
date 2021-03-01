@@ -8,11 +8,15 @@ class Minehunter {
   ArrayList<PVector> mines = new ArrayList<PVector>();
   ArrayList<PVector> minesFound = new ArrayList<PVector>();
   ArrayList<PVector> flags = new ArrayList<PVector>();
+  ArrayList<PVector> revealed = new ArrayList<PVector>();
 
   PImage flagImg = loadImage("flag.png");
+  PImage mineImg = loadImage("mine.png");
+  PImage bg = loadImage("tile0.png");
 
   Player player;
   Reward reward;
+
 
   Minehunter() {
     player = new Player();
@@ -64,8 +68,12 @@ class Minehunter {
     PVector coordinates = new PVector(player.i, player.j);
     if (!flags.contains(coordinates)) {
       flags.add(coordinates);
-    }
-    else {
+      if (isMine(player.i, player.j)) {
+        if (!minesFound.contains(coordinates)) {
+          minesFound.add(coordinates);
+        }
+      }
+    } else {
       flags.remove(coordinates);
     }
   }
@@ -79,12 +87,63 @@ class Minehunter {
     }
   }
 
+  void revealCell() {
+    if (!isMine(player.i, player.j)) {
+      PVector coordinates = new PVector(player.i, player.j);
+      if (!revealed.contains(coordinates)) {
+        revealed.add(coordinates);
+        reward.collectReward();
+      }
+    } else { // dummy function for now
+      displayMines();
+    }
+  }
+
+  void displayRevealedCells() {
+    for (PVector cell : revealed) {
+      int i = int(cell.x);
+      int j = int(cell.y);
+      if (i == player.i && j == player.j) {
+        pushMatrix();
+        translate(cellSize*.5, cellSize*.5);
+        fill(0);
+        textSize(cellSize*.4);
+        textAlign(CENTER, CENTER);
+        text(str(numNeighborMines(i, j)), i*cellSize, j*cellSize);
+        popMatrix();
+      }
+    }
+  }
+
+  void displayMines() {
+    for (PVector mine : mines) {
+      imageMode(CENTER);
+      float x = (mine.x + 0.5) * cellSize;
+      float y = (mine.y + 0.5) * cellSize;
+      image(mineImg, x, y, cellSize, cellSize);
+    }
+  }
+
   boolean isMine(int i, int j) {
     return board[i][j];
   }
 
   boolean gameWon() {
     return minesFound.size() == mines.size();
+  }
+
+  void displayBackground() {
+    pushMatrix();
+    translate(padding, padding);
+    for (int i=0; i<boardDim; i++) {
+      for (int j=0; j<boardDim; j++) {
+        stroke(255);
+        strokeWeight(2);
+        imageMode(CENTER);
+        image(bg, (i+0.5)*cellSize, (j+0.5)*cellSize, cellSize, cellSize);
+      }
+    }
+    popMatrix();
   }
 
   void displayBoard() {
@@ -94,6 +153,8 @@ class Minehunter {
       for (int j=0; j<boardDim; j++) {
         stroke(255);
         strokeWeight(2);
+        imageMode(CENTER);
+        //image(bg, (i+0.5)*cellSize, (j+0.5)*cellSize, cellSize, cellSize);
         //if (showingMines == true && minehunter.isMine(i, j)) {
         //  fill(tmpBomb);
         //} else {
@@ -108,10 +169,27 @@ class Minehunter {
   }
 
   void displayGame() {
+    //displayBackground();
     displayBoard();
     displayFlags();
+    displayRevealedCells();
+    if (!gameWon()) {
+      player.movePlayer();
+    }
     player.displayPlayer();
     reward.displayReward();
+    if (gameWon()) {
+      displayWin();
+    }
+  }
+
+  void displayWin() {
+    fill(255, 255, 255, 100);
+    rect(0, 0, width, height);
+    fill(0);
+    textSize(height*.1);
+    textAlign(CENTER, CENTER);
+    text("VICTORY!", width/2, height/2);
   }
 
   //void keyPressed() {
@@ -158,5 +236,7 @@ class Minehunter {
   void testMinehunter() {
     //println(stringToX("00"), stringToY("00"));
     //println(numNeighborMines(4, 4));
+    //println("Mines: "+str(mines.size()));
+    //println("Mines found: "+str(minesFound.size()));
   }
 }

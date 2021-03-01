@@ -11,11 +11,11 @@ class Reward {
   }
 
   void collectReward() {
-    currentReward += 5;
+    currentReward += 2;
   }
 
   void loseReward() {
-    currentReward -= 5;
+    currentReward -= 10;
   }
 
   void displayReward() {
