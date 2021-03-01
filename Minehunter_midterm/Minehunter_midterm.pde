@@ -1,5 +1,5 @@
 Minehunter minehunter;
-float padding = 20;
+float padding = 0;
 float boardDim = 8;
 float boardWidth, boardHeight, cellSize;
 color cellColor = color(238, 228, 218);
@@ -14,38 +14,19 @@ void setup() {
   minehunter = new Minehunter();
 }
 
-void displayBoard() {
-  translate(padding, padding);
-  for (int i=0; i<boardDim; i++) {
-    for (int j=0; j<boardDim; j++) {
-      stroke(255);
-      strokeWeight(2);
-      if (showingMines == true && minehunter.isMine(i, j)) {
-        fill(tmpBomb);
-      } else {
-        fill(cellColor);
-      }
-      rect(i*cellSize, j*cellSize, cellSize, cellSize);
-      if (showingMines == true && !minehunter.isMine(i, j)) {
-        pushMatrix();
-        translate(cellSize*.5, cellSize*.5);
-        fill(0);
-        textSize(cellSize*.4);
-        textAlign(CENTER, CENTER);
-        text(str(minehunter.numNeighborMines(i, j)), i*cellSize, j*cellSize);
-        popMatrix();
-      }
-    }
-  }
-}
-
 void draw() {
   background(255);
-  displayBoard();
+  minehunter.displayGame();
 }
 
 void keyPressed() {
   if (keyPressed) {
-    showingMines = !showingMines;
+    if (key == 'f' || key == 'F') {
+      minehunter.changeFlag();
+    }
   }
+}
+
+void mouseClicked() {
+  minehunter.reward.collectReward();
 }
