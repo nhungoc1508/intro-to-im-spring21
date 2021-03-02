@@ -15,9 +15,13 @@ class Player {
   int speed = int(cellSize*.08);
   //int speed = 6;
   float finBoardSize = cellSize * boardDim;
-  
+
   boolean autoMove = false;
 
+  /**
+   * Constructor of a player
+   * Default direction is right
+   */
   Player() {
     avatarPNG = loadImage("avatar1.png");
     avatar = new PImage[4][4];
@@ -37,12 +41,19 @@ class Player {
     updateCoordinates();
   }
 
+  /**
+   * Update row and column coordinates of player
+   * i, j in [0, 7]
+   */
   void updateCoordinates() {
     // Board coordinates
     i = int(x / cellSize);
     j = int(y / cellSize);
   }
 
+  /**
+   * Move player within board using arrow keys
+   */
   void movePlayer() {
     if (keyPressed || autoMove == true) {
       if (keyCode == DOWN && y < finBoardSize-midY) {
@@ -66,7 +77,10 @@ class Player {
       }
     }
   }
-   
+
+  /**
+   * Display player on screen
+   */
   void displayPlayer() {
     imageMode(CENTER);
     image(avatar[direction][step], x, y);

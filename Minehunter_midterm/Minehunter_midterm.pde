@@ -8,8 +8,6 @@ float boardWidth, boardHeight, cellSize;
 color cellColor = color(238, 228, 218);
 color playerColor = color(237, 207, 115);
 color helpColor = color(237, 207, 115);
-color tmpBomb = color(246, 124, 96);
-boolean showingMines = false;
 String screen = "welcome";
 PFont font, quicksand;
 

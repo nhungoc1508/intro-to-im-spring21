@@ -3,8 +3,6 @@ class Minehunter {
   int numCol = 8;
   int numMines = 8;
   boolean board[][] = new boolean[numRow][numCol];
-  //ArrayList<String> mines = new ArrayList<String>();
-  //ArrayList<String> minesFound = new ArrayList<String>();
   ArrayList<PVector> mines = new ArrayList<PVector>();
   ArrayList<PVector> minesFound = new ArrayList<PVector>();
   ArrayList<PVector> flags = new ArrayList<PVector>();
@@ -21,9 +19,11 @@ class Minehunter {
   Player player0, player;
   Reward reward;
 
-
+  /**
+   * Constructor of a game
+   */
   Minehunter() {
-    player0 = new Player();
+    player0 = new Player(); // animated avatar for welcome screen
     player = new Player();
     reward = new Reward();
 
@@ -51,8 +51,13 @@ class Minehunter {
     }
   }
 
+
+  /**
+   * Initialization of a Minehunter object
+   * Like constructor sans small details
+   * Used for resetting game
+   */
   void manualInit() {
-    //player0 = new Player();
     player = new Player();
     reward = new Reward();
 
@@ -80,6 +85,13 @@ class Minehunter {
     }
   }
 
+  /**
+   * Get number of neighbor cells with mines
+   * 'neighbor cells' = adjacent cells horizontally,
+   * vertically, diagonally
+   * @param row, col coordinates of the cell
+   * @return count number of neighbor cells with mines
+   */
   int numNeighborMines(int row, int col) {
     int count = 0;
     for (int i=row-1; i<row+2; i++) {
@@ -98,6 +110,10 @@ class Minehunter {
     return count;
   }
 
+  /**
+   * Plant a flag to a free cell (not revealed yet by player or
+   * through getting hint) or un-plant a flag from a flagged cell
+   */
   void changeFlag() {
     PVector coordinates = new PVector(player.i, player.j);
     if (!revealed.contains(coordinates)) {
@@ -117,6 +133,9 @@ class Minehunter {
     }
   }
 
+  /**
+   * Display flags on all flagged cells
+   */
   void displayFlags() {
     for (PVector flag : flags) {
       imageMode(CENTER);
@@ -126,6 +145,12 @@ class Minehunter {
     }
   }
 
+  /**
+   * Reveal the cell where the player currently is
+   * If it's a safe cell, reveal number of neighbor mines
+   * (visible while player is at the specific cell)
+   * If it's a mine, the mine explodes and player loses
+   */
   void revealCell() {
     PVector coordinates = new PVector(player.i, player.j);
     if (!flags.contains(coordinates)) {
@@ -141,11 +166,14 @@ class Minehunter {
         mineSound.amp(0.5);
         mineSound.play();
         screen = "lose";
-        //displayWin();
       }
     }
   }
 
+  /**
+   * Display the number of neighbor mines of the cell where the
+   * player is if the player has revealed said cell
+   */
   void displayRevealedCells() {
     for (PVector cell : revealed) {
       int i = int(cell.x);
@@ -162,6 +190,11 @@ class Minehunter {
     }
   }
 
+  /**
+   * Display the number of neighbor mines of all the cells
+   * obtained by getting hints. These numbers are visible
+   * permanently, unlike revealed cells
+   */
   void displayHints() {
     for (PVector cell : hints) {
       int i = int(cell.x);
@@ -176,6 +209,9 @@ class Minehunter {
     }
   }
 
+  /**
+   * Display all the mines, used when the user loses
+   */
   void displayMines() {
     for (PVector mine : mines) {
       imageMode(CENTER);
@@ -185,14 +221,27 @@ class Minehunter {
     }
   }
 
+  /**
+   * Check if a cell has a mine
+   * @param i, j row and column coordinates of the cell
+   * @return true if it is a mine, false otherwise
+   */
   boolean isMine(int i, int j) {
     return board[i][j];
   }
 
+  /**
+   * Check if player has won (has flagged all mines)
+   * @return true if all mines have been flagged
+   */
   boolean gameWon() {
     return minesFound.size() == mines.size();
   }
 
+  /**
+   * Display 8-bit texture in place of game board
+   * Slows down the program extensively, currently not used
+   */
   void displayBackground() {
     pushMatrix();
     translate(padding, padding);
@@ -207,6 +256,11 @@ class Minehunter {
     popMatrix();
   }
 
+  /**
+   * Display the game board
+   * Highlight the current position of the player
+   * Display the numbers of neighbor cells at hinted cells
+   */
   void displayBoard() {
     pushMatrix();
     translate(padding, padding);
@@ -234,6 +288,11 @@ class Minehunter {
     popMatrix();
   }
 
+  /**
+   * Display the entire game including board, player, rewards
+   * @param ongoing true if game is in progress, player can move
+   *                false if game has ended, player cannot move
+   */
   void displayGame(boolean ongoing) {
     displayBoard();
     displayFlags();
@@ -250,8 +309,11 @@ class Minehunter {
     }
   }
 
+  /**
+   * Display the welcome screen
+   * Include: game name, animated avatar, buttons
+   */
   void displayWelcome() {
-    // Game name
     fill(255);
     rect(0, 0, width, height);
     fill(0);
@@ -259,7 +321,7 @@ class Minehunter {
     textAlign(CENTER, CENTER);
     text("MINEHUNTER", width/2, height/3);
 
-    // Animated avatar
+    // Animated avatar moving on its own
     player0.x = width/2;
     player0.y = height/2;
     player0.displayPlayer();
@@ -270,6 +332,10 @@ class Minehunter {
     makeButton("START", "game", 0.85);
   }
 
+  /**
+   * Display instructions of the game
+   * Include: instructions, visuals, button to start
+   */
   void displayHowto() {
     // Left column
     String instruction0 = "Press SPACE to reveal a cell you think is safe.\n\nPress F to flag a cell you think is a mine.\n\nRevealing a safe cell earns you 2 points and\nshows the number of mines in neighbor cells\n(visible when you are at that cell).\n\nPress HINT to get a safe cell (-10 points).\n\nYou lose when you reveal a cell with mine.\n\nYou win when you flag all cells with mines.";
@@ -307,6 +373,10 @@ class Minehunter {
     makeButton("START", "game", 0.85);
   }
 
+  /**
+   * Display the result of the game and points
+   * @param result "win" or "lose" to display accordingly
+   */
   void displayResult(String result) {
     String displayText;
     if (result == "win") {
@@ -324,6 +394,9 @@ class Minehunter {
     makeButton("NEW GAME", "newgame", 0.75);
   }
 
+  /**
+   * Reset game
+   */
   void newGame() {
     mines.clear();
     minesFound.clear();
@@ -335,6 +408,11 @@ class Minehunter {
     screen = "game";
   }
 
+  /**
+   * Get a safe cell for the cost of 10 points
+   * Conditions: player has >= 10 points left
+   *             there is at least one unrevealed & unflagged safe cell
+   */
   void getHint() {
     if (!safeCells.isEmpty() && reward.currentReward >= 10) {
       reward.loseReward();
@@ -346,6 +424,11 @@ class Minehunter {
     }
   }
 
+  /**
+   * Display the HINT button
+   * Doubled as checking if the button is hovered over
+   * @return true if button is hovered over, false otherwise
+   */
   boolean displayHintButton() {
     float x = width - padding - 4*cellSize;
     float y = padding + cellSize*2;
@@ -378,6 +461,12 @@ class Minehunter {
     return false;
   }
 
+  /**
+   * Generic template for buttons (except HINT)
+   * @param content text to display on the button
+   *        func which screen to switch to
+   *        h y-position of the button (center mode) by % of height
+   */
   void makeButton(String content, String func, float h) {
     // Shape button
     pushStyle();
@@ -393,7 +482,6 @@ class Minehunter {
     if (leftButton <= mouseX && mouseX <= rightButton &&
       topButton <= mouseY && mouseY <= bottomButton) {
       button.setFill(150);
-      //shape(button);
       if (mousePressed) {
         screen = func;
         if (func == "game" || func == "newgame") {
@@ -425,12 +513,5 @@ class Minehunter {
       }
       println();
     }
-  }
-
-  void testMinehunter() {
-    //println(stringToX("00"), stringToY("00"));
-    //println(numNeighborMines(4, 4));
-    //println("Mines: "+str(mines.size()));
-    //println("Mines found: "+str(minesFound.size()));
   }
 }
