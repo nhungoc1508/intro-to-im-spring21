@@ -23,6 +23,8 @@ void draw() {
     case "welcome":
       minehunter.displayWelcome();
       break;
+    case "howto":
+      break;
     case "game":
       minehunter.displayGame();
       break;

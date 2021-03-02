@@ -204,30 +204,45 @@ class Minehunter {
     player0.autoMove = true;
     player0.movePlayer();
 
-    // Start button
+    // Buttons
+    String howto = "HOW TO";
     String start = "START";
     pushStyle();
     noStroke();
     textSize(height*.05);
+    float buttonWidth = textWidth(howto);
     rectMode(CENTER);
-    //fill(0);
-    PShape startButton = createShape(RECT, width/2, height*.75, textWidth(start)*1.2, textWidth(start)*.3);
+
+    PShape howtoButton = createShape(RECT, width/2, height*.75, buttonWidth*1.2, buttonWidth*.3);
+    howtoButton.setFill(0);
+    shape(howtoButton);
+
+    PShape startButton = createShape(RECT, width/2, height*.85, buttonWidth*1.2, buttonWidth*.3);
     startButton.setFill(0);
     shape(startButton);
-    //rect(width/2, height*.75, textWidth(start)*1.2, textWidth(start)*.3);
-    //fill(255);
-    //textAlign(CENTER, CENTER);
-    //text(start, width/2, height*.75);
     popStyle();
 
-    // Event: pressing start button
-    float leftStartButton = width/2 - textWidth(start)*1.2*.5;
-    float rightStartButton = width/2 + textWidth(start)*1.2*.5;
-    float topStartButton = height*.75 - textWidth(start)*.3*.5;
-    float bottomStartButton = height*.75 + textWidth(start)*.3*.5;
+    // Event: pressing How To button
+    float leftHowtoButton = width/2 - buttonWidth*1.2*.5;
+    float rightHowtoButton = width/2 + buttonWidth*1.2*.5;
+    float topHowtoButton = height*.75 - buttonWidth*.3*.5;
+    float bottomHowtoButton = height*.75 + buttonWidth*.3*.5;
+    if (leftHowtoButton <= mouseX && mouseX <= rightHowtoButton &&
+      topHowtoButton <= mouseY && mouseY <= bottomHowtoButton) {
+      howtoButton.setFill(150);
+      shape(howtoButton);
+      if (mousePressed) {
+        screen = "howto";
+      }
+    }
+
+    // Event: pressing Start button
+    float leftStartButton = width/2 - buttonWidth*1.2*.5;
+    float rightStartButton = width/2 + buttonWidth*1.2*.5;
+    float topStartButton = height*.85 - buttonWidth*.3*.5;
+    float bottomStartButton = height*.85 + buttonWidth*.3*.5;
     if (leftStartButton <= mouseX && mouseX <= rightStartButton &&
       topStartButton <= mouseY && mouseY <= bottomStartButton) {
-      //screen = "game";
       startButton.setFill(150);
       shape(startButton);
       if (mousePressed) {
@@ -235,12 +250,20 @@ class Minehunter {
       }
     }
 
-    // Text on start button
+    // Text on How To button
     pushStyle();
     textSize(height*.05);
     fill(255);
     textAlign(CENTER, CENTER);
-    text(start, width/2, height*.75);
+    text(howto, width/2, height*.75);
+    popStyle();
+
+    // Text on Start button
+    pushStyle();
+    textSize(height*.05);
+    fill(255);
+    textAlign(CENTER, CENTER);
+    text(start, width/2, height*.85);
     popStyle();
   }
 
@@ -252,14 +275,6 @@ class Minehunter {
     textAlign(CENTER, CENTER);
     text("VICTORY!", width/2, height/2);
   }
-
-  //void keyPressed() {
-  //  if (keyPressed) {
-  //    if (key == 'f' || key == 'F') {
-  //      addFlag();
-  //    }
-  //  }
-  //}
 
   /**
    * Print a textual form of the board
@@ -277,22 +292,6 @@ class Minehunter {
       println();
     }
   }
-
-  //String tupleToString(int i, int j) {
-  //  return str(i)+str(j);
-  //}
-
-  ///**
-  //* Coordinate in the form of 'ij'
-  //* i = ij / 10
-  //*/
-  //int stringToX(String coordinate) {
-  //  return int(int(coordinate) / 10);
-  //}
-
-  //int stringToY(String coordinate) {
-  //  return int(int(coordinate) % 10);
-  //}
 
   void testMinehunter() {
     //println(stringToX("00"), stringToY("00"));
