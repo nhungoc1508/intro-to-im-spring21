@@ -10,6 +10,8 @@ class Minehunter {
   ArrayList<PVector> flags = new ArrayList<PVector>();
   ArrayList<PVector> revealed = new ArrayList<PVector>();
 
+  float buttonWidth;
+
   PImage flagImg = loadImage("flag.png");
   PImage mineImg = loadImage("mine.png");
   PImage bg = loadImage("tile0.png");
@@ -22,6 +24,9 @@ class Minehunter {
     player0 = new Player();
     player = new Player();
     reward = new Reward();
+
+    textSize(height*.05);
+    buttonWidth = textWidth("NEW GAME");
 
     // Initializing gameboard with no mine
     for (int i=0; i<numRow; i++) {
@@ -155,12 +160,7 @@ class Minehunter {
         stroke(255);
         strokeWeight(2);
         imageMode(CENTER);
-        //image(bg, (i+0.5)*cellSize, (j+0.5)*cellSize, cellSize, cellSize);
-        //if (showingMines == true && minehunter.isMine(i, j)) {
-        //  fill(tmpBomb);
-        //} else {
         fill(cellColor);
-        //}
         rect(i*cellSize, j*cellSize, cellSize, cellSize);
         fill(tmpBomb);
         rect(player.i*cellSize, player.j*cellSize, cellSize, cellSize);
@@ -170,7 +170,6 @@ class Minehunter {
   }
 
   void displayGame() {
-    //displayBackground();
     displayBoard();
     displayFlags();
     displayRevealedCells();
@@ -180,7 +179,6 @@ class Minehunter {
     player.displayPlayer();
     reward.displayReward();
     if (gameWon()) {
-      //displayWin();
       screen = "win";
     }
   }
@@ -190,9 +188,6 @@ class Minehunter {
     fill(255);
     rect(0, 0, width, height);
     fill(0);
-    //if (frameCount % 100 == 0) {
-    //  fill(random(255), random(255), random(255));
-    //}
     textSize(height*.1);
     textAlign(CENTER, CENTER);
     text("MINEHUNTER", width/2, height/3);
@@ -210,7 +205,7 @@ class Minehunter {
     pushStyle();
     noStroke();
     textSize(height*.05);
-    float buttonWidth = textWidth(howto);
+    //float buttonWidth = textWidth(howto);
     rectMode(CENTER);
 
     PShape howtoButton = createShape(RECT, width/2, height*.75, buttonWidth*1.2, buttonWidth*.3);
@@ -266,6 +261,41 @@ class Minehunter {
     text(start, width/2, height*.85);
     popStyle();
   }
+  
+  void displayHowto() {
+    // Left column
+    String instruction0 = "\tThere are a number of mines to find.\n\nPress SPACE to reveal a cell you think is safe.\n\nPress F to flag a cell you think is a mine.\n\nRevealing a safe cell earns you 2 points and\nshows the number of mines in neighbor cells\n(visible when you are at that cell).";
+    
+    pushStyle();
+    textSize(height*.03);
+    textFont(quicksand);
+    textAlign(LEFT, CENTER);
+    fill(0);
+    text(instruction0, width*.02, height*.5);
+    popStyle();
+    
+    // Right column
+    PImage howto0 = loadImage("howto0.png");
+    String cap0 = "move around";
+    PImage howto1 = loadImage("howto1.png");
+    String cap1 = "flag a cell with mine";
+    PImage howto2 = loadImage("howto2.png");
+    String cap2 = "reveal a safe cell";
+    
+    pushStyle();
+    imageMode(CENTER);
+    textAlign(CENTER);
+    textSize(height*.03);
+    textFont(quicksand);
+    fill(0);
+    image(howto0, width*.85, height*.2, 200, 200);
+    text(cap0, width*.85, height*.2 + 120);
+    image(howto1, width*.85, height*.5, 200, 200);
+    text(cap1, width*.85, height*.5 + 120);
+    image(howto2, width*.85, height*.8, 200, 200);
+    text(cap2, width*.85, height*.8 + 120);
+    popStyle();
+  }
 
   void displayWin() {
     fill(255, 255, 255, 100);
@@ -274,6 +304,36 @@ class Minehunter {
     textSize(height*.1);
     textAlign(CENTER, CENTER);
     text("VICTORY!", width/2, height/2);
+
+    // New game button
+    pushStyle();
+    rectMode(CENTER);
+    PShape newgameButton = createShape(RECT, width/2, height*.75, buttonWidth*1.2, buttonWidth*.3);
+    newgameButton.setFill(0);
+    shape(newgameButton);
+    popStyle();
+
+    // Event: pressing New game button
+    float leftNewgameButton = width/2 - buttonWidth*1.2*.5;
+    float rightNewgameButton = width/2 + buttonWidth*1.2*.5;
+    float topNewgameButton = height*.75 - buttonWidth*.3*.5;
+    float bottomNewgameButton = height*.75 + buttonWidth*.3*.5;
+    if (leftNewgameButton <= mouseX && mouseX <= rightNewgameButton &&
+      topNewgameButton <= mouseY && mouseY <= bottomNewgameButton) {
+      newgameButton.setFill(150);
+      shape(newgameButton);
+      //if (mousePressed) {
+      //  screen = "game";
+      //}
+    }
+
+    // Text on New game button
+    pushStyle();
+    textSize(height*.05);
+    fill(255);
+    textAlign(CENTER, CENTER);
+    text("NEW GAME", width/2, height*.75);
+    popStyle();
   }
 
   /**
