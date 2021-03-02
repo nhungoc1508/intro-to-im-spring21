@@ -5,7 +5,7 @@ float boardWidth, boardHeight, cellSize;
 color cellColor = color(238, 228, 218);
 color tmpBomb = color(246, 124, 96);
 boolean showingMines = false;
-String screen = "howto";
+String screen = "welcome";
 PFont font, quicksand;
 
 void setup() {

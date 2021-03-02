@@ -199,81 +199,22 @@ class Minehunter {
     player0.autoMove = true;
     player0.movePlayer();
 
-    // Buttons
-    String howto = "HOW TO";
-    String start = "START";
-    pushStyle();
-    noStroke();
-    textSize(height*.05);
-    //float buttonWidth = textWidth(howto);
-    rectMode(CENTER);
-
-    PShape howtoButton = createShape(RECT, width/2, height*.75, buttonWidth*1.2, buttonWidth*.3);
-    howtoButton.setFill(0);
-    shape(howtoButton);
-
-    PShape startButton = createShape(RECT, width/2, height*.85, buttonWidth*1.2, buttonWidth*.3);
-    startButton.setFill(0);
-    shape(startButton);
-    popStyle();
-
-    // Event: pressing How To button
-    float leftHowtoButton = width/2 - buttonWidth*1.2*.5;
-    float rightHowtoButton = width/2 + buttonWidth*1.2*.5;
-    float topHowtoButton = height*.75 - buttonWidth*.3*.5;
-    float bottomHowtoButton = height*.75 + buttonWidth*.3*.5;
-    if (leftHowtoButton <= mouseX && mouseX <= rightHowtoButton &&
-      topHowtoButton <= mouseY && mouseY <= bottomHowtoButton) {
-      howtoButton.setFill(150);
-      shape(howtoButton);
-      if (mousePressed) {
-        screen = "howto";
-      }
-    }
-
-    // Event: pressing Start button
-    float leftStartButton = width/2 - buttonWidth*1.2*.5;
-    float rightStartButton = width/2 + buttonWidth*1.2*.5;
-    float topStartButton = height*.85 - buttonWidth*.3*.5;
-    float bottomStartButton = height*.85 + buttonWidth*.3*.5;
-    if (leftStartButton <= mouseX && mouseX <= rightStartButton &&
-      topStartButton <= mouseY && mouseY <= bottomStartButton) {
-      startButton.setFill(150);
-      shape(startButton);
-      if (mousePressed) {
-        screen = "game";
-      }
-    }
-
-    // Text on How To button
-    pushStyle();
-    textSize(height*.05);
-    fill(255);
-    textAlign(CENTER, CENTER);
-    text(howto, width/2, height*.75);
-    popStyle();
-
-    // Text on Start button
-    pushStyle();
-    textSize(height*.05);
-    fill(255);
-    textAlign(CENTER, CENTER);
-    text(start, width/2, height*.85);
-    popStyle();
+    makeButton("HOW TO", "howto", 0.75);
+    makeButton("START", "game", 0.85);
   }
-  
+
   void displayHowto() {
     // Left column
-    String instruction0 = "\tThere are a number of mines to find.\n\nPress SPACE to reveal a cell you think is safe.\n\nPress F to flag a cell you think is a mine.\n\nRevealing a safe cell earns you 2 points and\nshows the number of mines in neighbor cells\n(visible when you are at that cell).";
-    
+    String instruction0 = "Press SPACE to reveal a cell you think is safe.\n\nPress F to flag a cell you think is a mine.\n\nRevealing a safe cell earns you 2 points and\nshows the number of mines in neighbor cells\n(visible when you are at that cell).\n\nPress HINT to get a safe cell (-10 points).\n\nYou lose when you reveal a cell with mine.\n\nYou win when you flag all cells with mines.";
+
     pushStyle();
     textSize(height*.03);
     textFont(quicksand);
     textAlign(LEFT, CENTER);
     fill(0);
-    text(instruction0, width*.02, height*.5);
+    text(instruction0, width*.05, height*.4);
     popStyle();
-    
+
     // Right column
     PImage howto0 = loadImage("howto0.png");
     String cap0 = "move around";
@@ -281,7 +222,7 @@ class Minehunter {
     String cap1 = "flag a cell with mine";
     PImage howto2 = loadImage("howto2.png");
     String cap2 = "reveal a safe cell";
-    
+
     pushStyle();
     imageMode(CENTER);
     textAlign(CENTER);
@@ -289,12 +230,14 @@ class Minehunter {
     textFont(quicksand);
     fill(0);
     image(howto0, width*.85, height*.2, 200, 200);
-    text(cap0, width*.85, height*.2 + 120);
+    text(cap0, width*.85, height*.2 + 140);
     image(howto1, width*.85, height*.5, 200, 200);
-    text(cap1, width*.85, height*.5 + 120);
+    text(cap1, width*.85, height*.5 + 140);
     image(howto2, width*.85, height*.8, 200, 200);
-    text(cap2, width*.85, height*.8 + 120);
+    text(cap2, width*.85, height*.8 + 140);
     popStyle();
+
+    makeButton("START", "game", 0.85);
   }
 
   void displayWin() {
@@ -333,6 +276,34 @@ class Minehunter {
     fill(255);
     textAlign(CENTER, CENTER);
     text("NEW GAME", width/2, height*.75);
+    popStyle();
+  }
+
+  void makeButton(String content, String func, float h) {
+    // Shape button
+    pushStyle();
+    rectMode(CENTER);
+    PShape button = createShape(RECT, width/2, height*h, buttonWidth*1.2, buttonWidth*.3);
+    button.setFill(0);
+    shape(button);
+    // Event: pressing button
+    float leftButton = width/2 - buttonWidth*1.2*.5;
+    float rightButton = width/2 + buttonWidth*1.2*.5;
+    float topButton = height*h - buttonWidth*.3*.5;
+    float bottomButton = height*h + buttonWidth*.3*.5;
+    if (leftButton <= mouseX && mouseX <= rightButton &&
+      topButton <= mouseY && mouseY <= bottomButton) {
+      button.setFill(150);
+      shape(button);
+      if (mousePressed) {
+        screen = func;
+      }
+    }
+    // Text on button
+    textSize(height*.05);
+    fill(255);
+    textAlign(CENTER, CENTER);
+    text(content, width/2, height*h);
     popStyle();
   }
 
