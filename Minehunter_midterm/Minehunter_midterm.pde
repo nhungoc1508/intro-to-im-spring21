@@ -18,8 +18,8 @@ void setup() {
   cellSize = int(min((boardWidth / boardDim), (boardHeight / boardDim)));
   minehunter = new Minehunter();
   
-  font = createFont("PixelGameFont.ttf", 32);
-  quicksand = createFont("Quicksand-Regular.ttf", 32);
+  font = createFont("fonts/PixelGameFont.ttf", 32);
+  quicksand = createFont("fonts/Quicksand-Regular.ttf", 32);
   textFont(font);
   
   newgameSound = new SoundFile(this, "sounds/newgame.wav");

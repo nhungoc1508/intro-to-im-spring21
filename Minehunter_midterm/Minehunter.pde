@@ -12,9 +12,9 @@ class Minehunter {
 
   float buttonWidth;
 
-  PImage flagImg = loadImage("flag.png");
-  PImage mineImg = loadImage("mine.png");
-  PImage bg = loadImage("tile0.png");
+  PImage flagImg = loadImage("images/flag.png");
+  PImage mineImg = loadImage("images/mine.png");
+  PImage bg = loadImage("images/tile0.png");
 
   Player player0, player;
   Reward reward;
@@ -349,11 +349,11 @@ class Minehunter {
     popStyle();
 
     // Right column
-    PImage howto0 = loadImage("howto0.png");
+    PImage howto0 = loadImage("images/howto0.png");
     String cap0 = "move around";
-    PImage howto1 = loadImage("howto1.png");
+    PImage howto1 = loadImage("images/howto1.png");
     String cap1 = "flag a cell with mine";
-    PImage howto2 = loadImage("howto2.png");
+    PImage howto2 = loadImage("images/howto2.png");
     String cap2 = "reveal a safe cell";
 
     pushStyle();
@@ -435,14 +435,18 @@ class Minehunter {
     float w = cellSize*4;
     float h = cellSize;
     PShape hintButton = createShape(RECT, x, y, w, h);
-    hintButton.setFill(helpColor);
+    color hintButtonHover = color(237, 194, 45);  
+    if (reward.currentReward < 10) {
+      hintButton.setFill(hintButtonHover);
+    } else {
+      hintButton.setFill(helpColor);
+    }
     pushStyle();
     stroke(255);
     strokeWeight(2);
     shape(hintButton);
     if (x <= mouseX && mouseX <= x+w &&
       y <= mouseY && mouseY <= y+h && screen == "game") {
-      color hintButtonHover = color(237, 194, 45);  
       hintButton.setFill(hintButtonHover);
       shape(hintButton);
       fill(255);

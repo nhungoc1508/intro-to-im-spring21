@@ -6,6 +6,7 @@ class Reward {
   float boardWidth = (float(2)/float(3) * width) - (padding * 2);
   float boardHeight = height - (padding * 2);
   float cellSize = int(min((boardWidth / boardDim), (boardHeight / boardDim)));
+  boolean alert = false;
 
   /**
    * Constructor of a reward object

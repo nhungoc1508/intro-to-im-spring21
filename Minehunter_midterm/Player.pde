@@ -23,7 +23,7 @@ class Player {
    * Default direction is right
    */
   Player() {
-    avatarPNG = loadImage("avatar1.png");
+    avatarPNG = loadImage("images/avatar1.png");
     avatar = new PImage[4][4];
 
     int w = avatarPNG.width/4;
