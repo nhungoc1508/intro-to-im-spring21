@@ -35,12 +35,32 @@ class Minehunter {
       }
     }
 
-    // Formula for encoding coordinates:
-    // (i, j): i = row coordinate, j = col coordinate
-    // i, j <= 7 so can encoding in the form 'ij'
-    // e.g. '56' = (5, 6) = row 5, col 6
+    while (mines.size() != numMines) {
+      int i = int(random(numRow));
+      int j = int(random(numCol));
+      if (board[i][j] == false) {
+        board[i][j] = true;
+        PVector coordinates = new PVector(i, j);
+        mines.add(coordinates);
+      }
+    }
+  }
 
-    // Adding random mines (max 8) to gameboard
+  void manualInit() {
+    //player0 = new Player();
+    player = new Player();
+    reward = new Reward();
+
+    textSize(height*.05);
+    buttonWidth = textWidth("NEW GAME");
+
+    // Initializing gameboard with no mine
+    for (int i=0; i<numRow; i++) {
+      for (int j=0; j<numCol; j++) {
+        board[i][j] = false;
+      }
+    }
+
     while (mines.size() != numMines) {
       int i = int(random(numRow));
       int j = int(random(numCol));
@@ -100,8 +120,9 @@ class Minehunter {
         revealed.add(coordinates);
         reward.collectReward();
       }
-    } else { // dummy function for now
-      displayMines();
+    } else {
+      screen = "lose";
+      //displayWin();
     }
   }
 
@@ -162,18 +183,27 @@ class Minehunter {
         imageMode(CENTER);
         fill(cellColor);
         rect(i*cellSize, j*cellSize, cellSize, cellSize);
-        fill(tmpBomb);
+        fill(playerColor);
         rect(player.i*cellSize, player.j*cellSize, cellSize, cellSize);
+        if (screen == "win" || screen == "lose") {
+          pushMatrix();
+          translate(cellSize*.5, cellSize*.5);
+          fill(0);
+          textSize(cellSize*.4);
+          textAlign(CENTER, CENTER);
+          text(str(numNeighborMines(i, j)), i*cellSize, j*cellSize);
+          popMatrix();
+        }
       }
     }
     popMatrix();
   }
 
-  void displayGame() {
+  void displayGame(boolean ongoing) {
     displayBoard();
     displayFlags();
     displayRevealedCells();
-    if (!gameWon()) {
+    if (!gameWon() && ongoing) {
       player.movePlayer();
     }
     player.displayPlayer();
@@ -240,43 +270,33 @@ class Minehunter {
     makeButton("START", "game", 0.85);
   }
 
-  void displayWin() {
+  void displayResult(String result) {
+    String displayText;
+    if (result == "win") {
+      displayText = "YOU WON!";
+    } else {
+      displayText = "YOU LOST!";
+    }
+    pushStyle();
     fill(255, 255, 255, 100);
     rect(0, 0, width, height);
     fill(0);
     textSize(height*.1);
     textAlign(CENTER, CENTER);
-    text("VICTORY!", width/2, height/2);
+    text(displayText + "\nYOUR POINTS: " + str(reward.currentReward), width/2, height/2);
+    makeButton("NEW GAME", "newgame", 0.75);
+  }
 
-    // New game button
-    pushStyle();
-    rectMode(CENTER);
-    PShape newgameButton = createShape(RECT, width/2, height*.75, buttonWidth*1.2, buttonWidth*.3);
-    newgameButton.setFill(0);
-    shape(newgameButton);
-    popStyle();
+  void newGame() {
 
-    // Event: pressing New game button
-    float leftNewgameButton = width/2 - buttonWidth*1.2*.5;
-    float rightNewgameButton = width/2 + buttonWidth*1.2*.5;
-    float topNewgameButton = height*.75 - buttonWidth*.3*.5;
-    float bottomNewgameButton = height*.75 + buttonWidth*.3*.5;
-    if (leftNewgameButton <= mouseX && mouseX <= rightNewgameButton &&
-      topNewgameButton <= mouseY && mouseY <= bottomNewgameButton) {
-      newgameButton.setFill(150);
-      shape(newgameButton);
-      //if (mousePressed) {
-      //  screen = "game";
-      //}
-    }
-
-    // Text on New game button
-    pushStyle();
-    textSize(height*.05);
-    fill(255);
-    textAlign(CENTER, CENTER);
-    text("NEW GAME", width/2, height*.75);
-    popStyle();
+    //player = new Player();
+    //reward = new Reward();
+    mines.clear();
+    minesFound.clear();
+    flags.clear();
+    revealed.clear();
+    manualInit();
+    screen = "game";
   }
 
   void makeButton(String content, String func, float h) {

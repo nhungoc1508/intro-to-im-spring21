@@ -28,7 +28,7 @@ class Reward {
     fill(255);
     textSize(cellSize*.4);
     textAlign(CENTER, CENTER);
-    String displayText = "Your reward\n" + str(currentReward);
+    String displayText = "YOUR POINTS\n" + str(currentReward);
     text(displayText, x+w/2, y+h/2);
   }
 }

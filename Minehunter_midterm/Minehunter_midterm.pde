@@ -3,6 +3,7 @@ float padding = 0;
 float boardDim = 8;
 float boardWidth, boardHeight, cellSize;
 color cellColor = color(238, 228, 218);
+color playerColor = color(237, 207, 115);
 color tmpBomb = color(246, 124, 96);
 boolean showingMines = false;
 String screen = "welcome";
@@ -29,14 +30,21 @@ void draw() {
       minehunter.displayHowto();
       break;
     case "game":
-      minehunter.displayGame();
+      minehunter.displayGame(true);
       break;
     case "win":
-      minehunter.displayWin();
+      minehunter.displayGame(false);
+      minehunter.displayResult("win");
       break;
-    //case "loss":
-    //  minehunter.displayLoss();
-    //  break;
+    case "lose":
+      minehunter.displayGame(false);
+      minehunter.displayMines();
+      minehunter.displayResult("lose");
+      break;
+    case "newgame":
+      minehunter = new Minehunter();
+      minehunter.newGame();
+      break;
   }
 }
 
