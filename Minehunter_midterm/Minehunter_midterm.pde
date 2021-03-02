@@ -1,3 +1,6 @@
+import processing.sound.*;
+SoundFile newgameSound, flagSound, mineSound, safeSound;
+
 Minehunter minehunter;
 float padding = 0;
 float boardDim = 8;
@@ -15,9 +18,15 @@ void setup() {
   boardHeight = height - (padding * 2);
   cellSize = int(min((boardWidth / boardDim), (boardHeight / boardDim)));
   minehunter = new Minehunter();
+  
   font = createFont("PixelGameFont.ttf", 32);
   quicksand = createFont("Quicksand-Regular.ttf", 32);
   textFont(font);
+  
+  newgameSound = new SoundFile(this, "sounds/newgame.wav");
+  flagSound = new SoundFile(this, "sounds/flag.wav");
+  mineSound = new SoundFile(this, "sounds/mine.wav");
+  safeSound = new SoundFile(this, "sounds/safe.wav");
 }
 
 void draw() {
@@ -57,4 +66,8 @@ void keyPressed() {
       minehunter.revealCell();
     }
   }
+}
+
+void mousePressed() {
+  minehunter.getHint();
 }
