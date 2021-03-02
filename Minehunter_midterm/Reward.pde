@@ -23,7 +23,9 @@ class Reward {
     float y = padding;
     float w = cellSize*4;
     float h = cellSize*2;
-    fill(cellColor);
+    stroke(255);
+    strokeWeight(2);
+    fill(helpColor);
     rect(x, y, w, h);
     fill(255);
     textSize(cellSize*.4);

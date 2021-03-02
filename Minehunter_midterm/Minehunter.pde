@@ -10,6 +10,7 @@ class Minehunter {
   ArrayList<PVector> flags = new ArrayList<PVector>();
   ArrayList<PVector> revealed = new ArrayList<PVector>();
   ArrayList<PVector> hints = new ArrayList<PVector>();
+  ArrayList<PVector> safeCells = new ArrayList<PVector>();
 
   float buttonWidth;
 
@@ -33,6 +34,8 @@ class Minehunter {
     for (int i=0; i<numRow; i++) {
       for (int j=0; j<numCol; j++) {
         board[i][j] = false;
+        PVector coordinates = new PVector(i, j);
+        safeCells.add(coordinates);
       }
     }
 
@@ -43,6 +46,7 @@ class Minehunter {
         board[i][j] = true;
         PVector coordinates = new PVector(i, j);
         mines.add(coordinates);
+        safeCells.remove(coordinates);
       }
     }
   }
@@ -59,6 +63,8 @@ class Minehunter {
     for (int i=0; i<numRow; i++) {
       for (int j=0; j<numCol; j++) {
         board[i][j] = false;
+        PVector coordinates = new PVector(i, j);
+        safeCells.add(coordinates);
       }
     }
 
@@ -69,6 +75,7 @@ class Minehunter {
         board[i][j] = true;
         PVector coordinates = new PVector(i, j);
         mines.add(coordinates);
+        safeCells.remove(coordinates);
       }
     }
   }
@@ -93,18 +100,21 @@ class Minehunter {
 
   void changeFlag() {
     PVector coordinates = new PVector(player.i, player.j);
-    if (!flags.contains(coordinates)) {
-      flags.add(coordinates);
-      if (isMine(player.i, player.j)) {
-        if (!minesFound.contains(coordinates)) {
-          minesFound.add(coordinates);
+    if (!revealed.contains(coordinates)) {
+      if (!flags.contains(coordinates) && !hints.contains(coordinates)) {
+        flags.add(coordinates);
+        safeCells.remove(coordinates);
+        if (isMine(player.i, player.j)) {
+          if (!minesFound.contains(coordinates)) {
+            minesFound.add(coordinates);
+          }
         }
+      } else {
+        flags.remove(coordinates);
       }
-    } else {
-      flags.remove(coordinates);
+      flagSound.amp(0.5);
+      flagSound.play();
     }
-    flagSound.amp(0.5);
-    flagSound.play();
   }
 
   void displayFlags() {
@@ -117,19 +127,22 @@ class Minehunter {
   }
 
   void revealCell() {
-    if (!isMine(player.i, player.j)) {
-      PVector coordinates = new PVector(player.i, player.j);
-      if (!revealed.contains(coordinates)) {
-        revealed.add(coordinates);
-        reward.collectReward();
-        safeSound.amp(0.3);
-        safeSound.play();
+    PVector coordinates = new PVector(player.i, player.j);
+    if (!flags.contains(coordinates)) {
+      if (!isMine(player.i, player.j)) {
+        if (!revealed.contains(coordinates) && !hints.contains(coordinates)) {
+          revealed.add(coordinates);
+          safeCells.remove(coordinates);
+          reward.collectReward();
+          safeSound.amp(0.3);
+          safeSound.play();
+        }
+      } else {
+        mineSound.amp(0.5);
+        mineSound.play();
+        screen = "lose";
+        //displayWin();
       }
-    } else {
-      mineSound.amp(0.5);
-      mineSound.play();
-      screen = "lose";
-      //displayWin();
     }
   }
 
@@ -137,7 +150,7 @@ class Minehunter {
     for (PVector cell : revealed) {
       int i = int(cell.x);
       int j = int(cell.y);
-      if (i == player.i && j == player.j) {
+      if ((i == player.i && j == player.j)) {
         pushMatrix();
         translate(cellSize*.5, cellSize*.5);
         fill(0);
@@ -146,6 +159,20 @@ class Minehunter {
         text(str(numNeighborMines(i, j)), i*cellSize, j*cellSize);
         popMatrix();
       }
+    }
+  }
+
+  void displayHints() {
+    for (PVector cell : hints) {
+      int i = int(cell.x);
+      int j = int(cell.y);
+      pushMatrix();
+      translate(cellSize*.5, cellSize*.5);
+      fill(0);
+      textSize(cellSize*.4);
+      textAlign(CENTER, CENTER);
+      text(str(numNeighborMines(i, j)), i*cellSize, j*cellSize);
+      popMatrix();
     }
   }
 
@@ -211,6 +238,8 @@ class Minehunter {
     displayBoard();
     displayFlags();
     displayRevealedCells();
+    displayHints();
+    boolean throwaway = displayHintButton();
     if (!gameWon() && ongoing) {
       player.movePlayer();
     }
@@ -301,27 +330,52 @@ class Minehunter {
     flags.clear();
     revealed.clear();
     hints.clear();
+    safeCells.clear();
     manualInit();
     screen = "game";
   }
 
   void getHint() {
-    //int i = int(random(numRow));
-    //int j = int(random(numCol));
-    //PVector coordinates = new PVector(i, j);
-    //int availCells = int(boardDim*boardDim-(mines.size()-minesFound.size()+flags.size()+revealed.size()));
-    //println(availCells-hints.size());
-    //if (hints.size() < availCells) {
-    //  while (mines.contains(coordinates) || flags.contains(coordinates) || revealed.contains(coordinates)) {
-    //    i = int(random(numRow));
-    //    j = int(random(numCol));
-    //  }
-    //}
-    ////println(i, j);
-    //if (!mines.contains(coordinates) && !flags.contains(coordinates) && !revealed.contains(coordinates)) {
-    //  println(i, j);
-    //  hints.add(coordinates);
-    //}
+    if (!safeCells.isEmpty() && reward.currentReward >= 10) {
+      reward.loseReward();
+      safeSound.amp(0.3);
+      safeSound.play();
+      int index = int(random(safeCells.size()));
+      hints.add(safeCells.get(index));
+      safeCells.remove(index);
+    }
+  }
+
+  boolean displayHintButton() {
+    float x = width - padding - 4*cellSize;
+    float y = padding + cellSize*2;
+    float w = cellSize*4;
+    float h = cellSize;
+    PShape hintButton = createShape(RECT, x, y, w, h);
+    hintButton.setFill(helpColor);
+    pushStyle();
+    stroke(255);
+    strokeWeight(2);
+    shape(hintButton);
+    if (x <= mouseX && mouseX <= x+w &&
+      y <= mouseY && mouseY <= y+h && screen == "game") {
+      color hintButtonHover = color(237, 194, 45);  
+      hintButton.setFill(hintButtonHover);
+      shape(hintButton);
+      fill(255);
+      textSize(cellSize*.4);
+      textAlign(CENTER, CENTER);
+      String displayText = "HINT";
+      text(displayText, x+w/2, y+h/2);
+      return true;
+    }
+    fill(255);
+    textSize(cellSize*.4);
+    textAlign(CENTER, CENTER);
+    String displayText = "HINT";
+    text(displayText, x+w/2, y+h/2);
+    popStyle();
+    return false;
   }
 
   void makeButton(String content, String func, float h) {
@@ -339,7 +393,7 @@ class Minehunter {
     if (leftButton <= mouseX && mouseX <= rightButton &&
       topButton <= mouseY && mouseY <= bottomButton) {
       button.setFill(150);
-      shape(button);
+      //shape(button);
       if (mousePressed) {
         screen = func;
         if (func == "game" || func == "newgame") {
