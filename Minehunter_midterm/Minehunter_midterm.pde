@@ -19,7 +19,20 @@ void setup() {
 
 void draw() {
   background(255);
-  minehunter.displayGame();
+  switch(screen) {
+    case "welcome":
+      minehunter.displayWelcome();
+      break;
+    case "game":
+      minehunter.displayGame();
+      break;
+    case "win":
+      minehunter.displayWin();
+      break;
+    //case "loss":
+    //  minehunter.displayLoss();
+    //  break;
+  }
 }
 
 void keyPressed() {
@@ -31,8 +44,4 @@ void keyPressed() {
       minehunter.revealCell();
     }
   }
-}
-
-void mouseClicked() {
-  minehunter.reward.collectReward();
 }

@@ -13,7 +13,10 @@ class Player {
   float cellSize = int(min((boardWidth / boardDim), (boardHeight / boardDim)));
 
   int speed = int(cellSize*.08);
+  //int speed = 6;
   float finBoardSize = cellSize * boardDim;
+  
+  boolean autoMove = false;
 
   Player() {
     avatarPNG = loadImage("avatar1.png");
@@ -41,7 +44,7 @@ class Player {
   }
 
   void movePlayer() {
-    if (keyPressed) {
+    if (keyPressed || autoMove == true) {
       if (keyCode == DOWN && y < finBoardSize-midY) {
         direction = 0;
         y += speed;

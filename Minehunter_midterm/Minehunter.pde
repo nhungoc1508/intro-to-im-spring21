@@ -14,11 +14,12 @@ class Minehunter {
   PImage mineImg = loadImage("mine.png");
   PImage bg = loadImage("tile0.png");
 
-  Player player;
+  Player player0, player;
   Reward reward;
 
 
   Minehunter() {
+    player0 = new Player();
     player = new Player();
     reward = new Reward();
 
@@ -179,8 +180,68 @@ class Minehunter {
     player.displayPlayer();
     reward.displayReward();
     if (gameWon()) {
-      displayWin();
+      //displayWin();
+      screen = "win";
     }
+  }
+
+  void displayWelcome() {
+    // Game name
+    fill(255);
+    rect(0, 0, width, height);
+    fill(0);
+    //if (frameCount % 100 == 0) {
+    //  fill(random(255), random(255), random(255));
+    //}
+    textSize(height*.1);
+    textAlign(CENTER, CENTER);
+    text("MINEHUNTER", width/2, height/3);
+
+    // Animated avatar
+    player0.x = width/2;
+    player0.y = height/2;
+    player0.displayPlayer();
+    player0.autoMove = true;
+    player0.movePlayer();
+
+    // Start button
+    String start = "START";
+    pushStyle();
+    noStroke();
+    textSize(height*.05);
+    rectMode(CENTER);
+    //fill(0);
+    PShape startButton = createShape(RECT, width/2, height*.75, textWidth(start)*1.2, textWidth(start)*.3);
+    startButton.setFill(0);
+    shape(startButton);
+    //rect(width/2, height*.75, textWidth(start)*1.2, textWidth(start)*.3);
+    //fill(255);
+    //textAlign(CENTER, CENTER);
+    //text(start, width/2, height*.75);
+    popStyle();
+
+    // Event: pressing start button
+    float leftStartButton = width/2 - textWidth(start)*1.2*.5;
+    float rightStartButton = width/2 + textWidth(start)*1.2*.5;
+    float topStartButton = height*.75 - textWidth(start)*.3*.5;
+    float bottomStartButton = height*.75 + textWidth(start)*.3*.5;
+    if (leftStartButton <= mouseX && mouseX <= rightStartButton &&
+      topStartButton <= mouseY && mouseY <= bottomStartButton) {
+      //screen = "game";
+      startButton.setFill(150);
+      shape(startButton);
+      if (mousePressed) {
+        screen = "game";
+      }
+    }
+
+    // Text on start button
+    pushStyle();
+    textSize(height*.05);
+    fill(255);
+    textAlign(CENTER, CENTER);
+    text(start, width/2, height*.75);
+    popStyle();
   }
 
   void displayWin() {
